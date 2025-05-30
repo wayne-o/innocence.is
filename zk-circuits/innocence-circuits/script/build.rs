@@ -6,4 +6,10 @@ fn main() {
     
     // Build balance proof program
     build_program_with_args("../balance-proof", Default::default());
+    
+    // Build compliance proof program
+    build_program_with_args("../compliance-proof", Default::default());
+    
+    // Build trade proof program
+    build_program_with_args("../trade-proof", Default::default());
 }

@@ -1,0 +1,10 @@
+[package]
+name = "innocence-trade-proof"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm = "4.2.0"
+alloy-sol-types = { workspace = true }
+innocence-circuits-lib = { path = "../lib" }
+sha2 = "0.10"

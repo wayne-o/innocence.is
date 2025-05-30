@@ -1,0 +1,10 @@
+[package]
+version = "0.1.0"
+name = "innocence-compliance-proof"
+edition = "2021"
+
+[dependencies]
+alloy-sol-types = { workspace = true }
+sp1-zkvm = "4.2.0"
+sha2 = "0.10"
+innocence-circuits-lib = { path = "../lib" }

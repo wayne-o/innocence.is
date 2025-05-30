@@ -6,19 +6,19 @@ default-run = "ownership-proof"
 
 [[bin]]
 name = "ownership-proof"
-path = "src/bin/main.rs"
+path = "src/bin/ownership_proof.rs"
 
 [[bin]]
 name = "balance-proof"
 path = "src/bin/balance_proof.rs"
 
 [[bin]]
-name = "evm"
-path = "src/bin/evm.rs"
+name = "compliance-proof"
+path = "src/bin/compliance_proof.rs"
 
 [[bin]]
-name = "vkey"
-path = "src/bin/vkey.rs"
+name = "trade-proof"
+path = "src/bin/trade_proof.rs"
 
 [dependencies]
 sp1-sdk = "4.2.0"
@@ -28,6 +28,7 @@ clap = { version = "4.0", features = ["derive", "env"] }
 tracing = "0.1.40"
 hex = "0.4.3"
 sha2 = "0.10"
+chrono = "0.4"
 alloy-sol-types = { workspace = true }
 innocence-circuits-lib = { path = "../lib" }
 dotenv = "0.15.0"

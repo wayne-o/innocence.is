@@ -3,6 +3,8 @@ members = [
     "lib",
     "program",
     "balance-proof",
+    "compliance-proof",
+    "trade-proof",
     "script",
 ]
 resolver = "2"
