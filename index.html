@@ -1,0 +1,229 @@
+<!-- <!DOCTYPE html> -->
+<html>
+
+<head>
+  <!-- the robots are comming -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>innocence.is</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="/ico/site.webmanifest" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/Asset 3-8.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+  <style>
+    @font-face {
+      font-family: Modia;
+      src: url('fonts/modia/Modia-NonCommercial.otf') format('opentype');
+    }
+
+    html,
+    body {
+      font-family: 'Futura', 'Century Gothic', 'Avenir Next', 'Avenir', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      font-size: 2em;
+      color: white;
+      height: 100%;
+      background-color: #13313d;
+      animation: mymove 60s infinite;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      font-size: 4em;
+      margin-bottom: 0.2em;
+    }
+
+    h2 {
+      font-size: 0.8em;
+      font-weight: 400;
+      opacity: 0.8;
+      letter-spacing: 0.02em;
+      display: block;
+      position: relative;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .typewriter-container {
+      display: inline-block;
+      text-align: left;
+    }
+
+    .line1, .line2 {
+      display: block;
+      width: max-content;
+      position: relative;
+    }
+
+    .line1::before, .line2::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: inherit;
+      animation: reveal-text 3s steps(50, end) forwards;
+    }
+
+    .line2::before {
+      animation: reveal-text 2.5s steps(30, end) 3.5s forwards;
+    }
+
+    .line1::after, .line2::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background-color: white;
+    }
+
+    .line1::after {
+      animation: typewriter-cursor 3s steps(50, end) forwards,
+                 blink-caret .75s step-end 3s 2;
+    }
+
+    .line2 {
+      opacity: 0;
+      animation: show-line 0s 3.5s forwards;
+    }
+
+    .line2::after {
+      animation: typewriter-cursor 2.5s steps(30, end) 3.5s forwards,
+                 blink-caret .75s step-end 6s infinite;
+    }
+
+    @keyframes reveal-text {
+      to { left: 100%; }
+    }
+
+    @keyframes typewriter-cursor {
+      to { right: -0.15em; }
+    }
+
+    @keyframes show-line {
+      to { opacity: 1; }
+    }
+
+    @keyframes show-cursor {
+      to { opacity: 1; }
+    }
+
+
+    @keyframes blink-caret {
+
+      from,
+      to {
+        opacity: 0
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes mymove {
+      from {
+        background-color: #13313d;
+      }
+
+      20% {
+        background-color: #f42c6a;
+      }
+
+      40% {
+        background-color: #f4b740;
+      }
+
+      60% {
+        background-color: #6e1eed;
+      }
+
+      80% {
+        background-color: #1ded9d;
+      }
+
+      to {
+        background-color: #13313d;
+      }
+    }
+
+    a {
+      color: var(--bs-link-color);
+      text-decoration: underline;
+      font-size: .7em;
+    }
+
+    a:hover {
+      color: var(--bs-link-hover-color);
+    }
+
+    a:not([href]):not([class]),
+    a:not([href]):not([class]):hover {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    small,
+    .small {
+      font-size: 0.1em;
+    }
+
+    .h-100 {
+      height: 90% !important;
+    }
+
+    .flower {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 0.8em;
+      }
+
+      h1 {
+        font-size: 3em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main_content">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+      <div class="d-flex justify-content-center">
+        <div class="text-center">
+          <h1 class="mx-auto my-0 text-lowrecase">
+            innocence.is
+          </h1>
+          <div class="typewriter-container">
+            <h2 class="line1">
+              ... The privacy infrastructure for all of finance.
+            </h2>
+            <h2 class="line2">
+              Coming soon to Hyperliquid.
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
