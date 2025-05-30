@@ -50,78 +50,37 @@
       font-weight: 400;
       opacity: 0.8;
       letter-spacing: 0.02em;
-      display: block;
-      position: relative;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .typewriter-container {
       display: inline-block;
-      text-align: left;
-    }
-
-    .line1, .line2 {
-      display: block;
-      width: max-content;
       position: relative;
     }
 
-    .line1::before, .line2::before {
+    h2::after {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: inherit;
-      animation: reveal-text 3s steps(50, end) forwards;
-    }
-
-    .line2::before {
-      animation: reveal-text 2.5s steps(30, end) 3.5s forwards;
-    }
-
-    .line1::after, .line2::after {
-      content: '';
-      position: absolute;
-      right: 0;
+      right: -0.15em;
       top: 0;
       height: 100%;
       width: 2px;
       background-color: white;
+      animation: blink-caret .75s step-end infinite;
     }
 
-    .line1::after {
-      animation: typewriter-cursor 3s steps(50, end) forwards,
-                 blink-caret .75s step-end 3s 2;
+    .typewriter {
+      overflow: hidden;
+      animation: typing 3.5s steps(40, end);
+      white-space: nowrap;
+      max-width: fit-content;
+      margin: 0 auto;
     }
 
-    .line2 {
-      opacity: 0;
-      animation: show-line 0s 3.5s forwards;
-    }
+    @keyframes typing {
+      from {
+        width: 0
+      }
 
-    .line2::after {
-      animation: typewriter-cursor 2.5s steps(30, end) 3.5s forwards,
-                 blink-caret .75s step-end 6s infinite;
-    }
-
-    @keyframes reveal-text {
-      to { left: 100%; }
-    }
-
-    @keyframes typewriter-cursor {
-      to { right: -0.15em; }
-    }
-
-    @keyframes show-line {
-      to { opacity: 1; }
-    }
-
-    @keyframes show-cursor {
-      to { opacity: 1; }
+      to {
+        width: 100%
+      }
     }
 
 
@@ -212,12 +171,9 @@
           <h1 class="mx-auto my-0 text-lowrecase">
             innocence.is
           </h1>
-          <div class="typewriter-container">
-            <h2 class="line1">
-              ... The privacy infrastructure for all of finance.
-            </h2>
-            <h2 class="line2">
-              Coming soon to Hyperliquid.
+          <div class="typewriter">
+            <h2>
+              The privacy infrastructure for all of finance.
             </h2>
           </div>
         </div>
