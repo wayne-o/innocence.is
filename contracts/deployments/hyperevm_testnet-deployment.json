@@ -1,0 +1,9 @@
+{
+  "network": "hyperevm_testnet",
+  "contractAddress": "0xfD7FCf5156FAff31f9C74bb967Ec56583b814d31",
+  "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "deploymentTime": "2025-05-29T16:31:20.722Z",
+  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "chainId": 998,
+  "rpcUrl": "https://rpc.hyperliquid-testnet.xyz/evm"
+}

@@ -1,0 +1,189 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystem.sol": {
+      "lastModificationDate": 1748524799180,
+      "contentHash": "2a52e5a5e2c226231a8f37ec93287c53",
+      "sourceName": "contracts/HyperliquidPrivacySystem.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HyperliquidPrivacySystem",
+        "IHyperCoreRead",
+        "IHyperCoreWrite"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/MockHyperCore.sol": {
+      "lastModificationDate": 1748525659356,
+      "contentHash": "6ecb6a0e08a48d72e51b0d86a2cacbdf",
+      "sourceName": "contracts/MockHyperCore.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "MockHyperCoreRead",
+        "MockHyperCoreWrite"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemTestnet.sol": {
+      "lastModificationDate": 1748536708991,
+      "contentHash": "d1bf1b472c5690302ab94a8530f8ec78",
+      "sourceName": "contracts/HyperliquidPrivacySystemTestnet.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HyperliquidPrivacySystemTestnet"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/TestPrecompile.sol": {
+      "lastModificationDate": 1748536949219,
+      "contentHash": "2e7a5e6f00650070c26712a1bbbaf982",
+      "sourceName": "contracts/TestPrecompile.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "IHyperCoreRead",
+        "IHyperCoreWrite",
+        "TestPrecompile"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemV3.sol": {
+      "lastModificationDate": 1748589214252,
+      "contentHash": "0e155972c69fbad433a66cf2b57f7b6a",
+      "sourceName": "contracts/HyperliquidPrivacySystemV3.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HyperliquidPrivacySystemV3",
+        "IHyperCoreWrite",
+        "IOraclePxPrecompile",
+        "IPositionPrecompile",
+        "ISpotBalancePrecompile"
+      ]
+    }
+  }
+}

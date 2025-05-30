@@ -1,0 +1,177 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockHyperCoreWrite",
+  "sourceName": "contracts/MockHyperCore.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "size",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isBuy",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "maxSlippage",
+          "type": "uint256"
+        }
+      ],
+      "name": "MockIOCOrder",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "MockSpotTransfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "vault",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isDeposit",
+          "type": "bool"
+        }
+      ],
+      "name": "MockVaultTransfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "int256",
+          "name": "size",
+          "type": "int256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isBuy",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxSlippage",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendIOCOrder",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "sendSpot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "vault",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "asset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isDeposit",
+          "type": "bool"
+        }
+      ],
+      "name": "vaultTransfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5061028a806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063212a676d14610046578063488b27be1461005b578063cdb011631461006e575b600080fd5b610059610054366004610185565b610081565b005b6100596100693660046101d9565b6100d4565b61005961007c36600461021f565b610123565b604080518581526020810185905283151591810191909152606081018290527f027d85d4de16d73c9db86e7bb4e0be678706419d8f3fccbc5864ee83c1fba188906080015b60405180910390a150505050565b604080516001600160a01b03861681526020810185905290810183905281151560608201527f89684021e6043832e41909128d7d78070a6cc96acab8531c64f6ab5e5e7e7562906080016100c6565b60408051848152602081018490526001600160a01b0383168183015290517f3c4044a9ea9022055c424b0a2d65b0359f156ab927d2b2103619189cb9fb89119181900360600190a1505050565b8035801515811461018057600080fd5b919050565b6000806000806080858703121561019b57600080fd5b84359350602085013592506101b260408601610170565b9396929550929360600135925050565b80356001600160a01b038116811461018057600080fd5b600080600080608085870312156101ef57600080fd5b6101f8856101c2565b9350602085013592506040850135915061021460608601610170565b905092959194509250565b60008060006060848603121561023457600080fd5b833592506020840135915061024b604085016101c2565b9050925092509256fea2646970667358221220ad90943f63025de5cf1ef27c1dde41a83e4d642d398ea02c6474d9ac5e74b03f64736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063212a676d14610046578063488b27be1461005b578063cdb011631461006e575b600080fd5b610059610054366004610185565b610081565b005b6100596100693660046101d9565b6100d4565b61005961007c36600461021f565b610123565b604080518581526020810185905283151591810191909152606081018290527f027d85d4de16d73c9db86e7bb4e0be678706419d8f3fccbc5864ee83c1fba188906080015b60405180910390a150505050565b604080516001600160a01b03861681526020810185905290810183905281151560608201527f89684021e6043832e41909128d7d78070a6cc96acab8531c64f6ab5e5e7e7562906080016100c6565b60408051848152602081018490526001600160a01b0383168183015290517f3c4044a9ea9022055c424b0a2d65b0359f156ab927d2b2103619189cb9fb89119181900360600190a1505050565b8035801515811461018057600080fd5b919050565b6000806000806080858703121561019b57600080fd5b84359350602085013592506101b260408601610170565b9396929550929360600135925050565b80356001600160a01b038116811461018057600080fd5b600080600080608085870312156101ef57600080fd5b6101f8856101c2565b9350602085013592506040850135915061021460608601610170565b905092959194509250565b60008060006060848603121561023457600080fd5b833592506020840135915061024b604085016101c2565b9050925092509256fea2646970667358221220ad90943f63025de5cf1ef27c1dde41a83e4d642d398ea02c6474d9ac5e74b03f64736f6c63430008130033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

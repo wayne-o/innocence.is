@@ -1,0 +1,6 @@
+@InnocenceAPI_HostAddress = http://localhost:5169
+
+GET {{InnocenceAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

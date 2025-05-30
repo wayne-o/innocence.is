@@ -1,0 +1,16 @@
+{
+  "network": "hyperevm_testnet",
+  "contractAddress": "0x62040EF8551cE0ad550fE9f37683E59db7603358",
+  "contractVersion": "V3",
+  "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "deploymentTime": "2025-05-30T07:14:34.223Z",
+  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "precompiles": {
+    "position": "0x0000000000000000000000000000000000000800",
+    "spotBalance": "0x0000000000000000000000000000000000000801",
+    "oraclePx": "0x0000000000000000000000000000000000000807",
+    "spotPx": "0x0000000000000000000000000000000000000808",
+    "write": "0x3333333333333333333333333333333333333333"
+  },
+  "notes": "Uses correct HyperCore precompile interfaces with proper data types"
+}

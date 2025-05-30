@@ -1,0 +1,83 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
+contract InnocencePool {
+    using ECDSA for bytes32;
+    using MessageHashUtils for bytes32;
+
+    struct Certificate {
+        address user;
+        uint256 expiryTime;
+        bytes signature;
+    }
+
+    struct Commitment {
+        bytes32 commitmentHash;
+        uint256 amount;
+        uint256 timestamp;
+    }
+
+    address public complianceAuthority;
+    uint256 public constant CERTIFICATE_VALIDITY = 7 days;
+    uint256 public constant MIN_DEPOSIT = 0.1 ether;
+    
+    mapping(bytes32 => Commitment) public commitments;
+    mapping(bytes32 => bool) public nullifiers;
+    mapping(address => uint256) public balances;
+    
+    event Deposit(bytes32 indexed commitment, uint256 amount);
+    event Withdrawal(bytes32 indexed nullifier, address indexed recipient, uint256 amount);
+    
+    constructor(address _complianceAuthority) {
+        complianceAuthority = _complianceAuthority;
+    }
+    
+    function deposit(
+        bytes32 _commitment,
+        Certificate calldata _certificate
+    ) external payable {
+        require(msg.value >= MIN_DEPOSIT, "Deposit too small");
+        require(_certificate.user == msg.sender, "Certificate mismatch");
+        require(_certificate.expiryTime > block.timestamp, "Certificate expired");
+        require(commitments[_commitment].amount == 0, "Commitment exists");
+        
+        bytes32 messageHash = keccak256(abi.encode(_certificate.user, _certificate.expiryTime));
+        bytes32 ethSignedMessageHash = messageHash.toEthSignedMessageHash();
+        address signer = ethSignedMessageHash.recover(_certificate.signature);
+        require(signer == complianceAuthority, "Invalid certificate");
+        
+        commitments[_commitment] = Commitment({
+            commitmentHash: _commitment,
+            amount: msg.value,
+            timestamp: block.timestamp
+        });
+        
+        emit Deposit(_commitment, msg.value);
+    }
+    
+    function withdraw(
+        bytes32 _nullifier,
+        address _recipient,
+        bytes32 _commitment,
+        bytes calldata _proof
+    ) external {
+        require(!nullifiers[_nullifier], "Already withdrawn");
+        require(commitments[_commitment].amount > 0, "Invalid commitment");
+        
+        nullifiers[_nullifier] = true;
+        uint256 amount = commitments[_commitment].amount;
+        
+        (bool success, ) = _recipient.call{value: amount}("");
+        require(success, "Transfer failed");
+        
+        emit Withdrawal(_nullifier, _recipient, amount);
+    }
+    
+    function updateComplianceAuthority(address _newAuthority) external {
+        require(msg.sender == complianceAuthority, "Unauthorized");
+        complianceAuthority = _newAuthority;
+    }
+}
