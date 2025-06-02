@@ -1,0 +1,42 @@
+{
+  "network": {
+    "name": "hyperevm_testnet",
+    "chainId": 998,
+    "rpcUrl": "https://api.hyperliquid-testnet.xyz/evm",
+    "explorerUrl": "https://explorer.hyperliquid-testnet.xyz",
+    "nativeCurrency": {
+      "name": "HYPE",
+      "symbol": "HYPE",
+      "decimals": 18
+    }
+  },
+  "contracts": {
+    "sp1Verifier": "0x3B6041173B80E77f038f3F2C0f9744f04837185e",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+    "privacySystem": "0x669E4933eE72a35eBC0c00f9C3084ce46e4424c4",
+    "transferHelper": "0x1A3fDcB1621B9ffD087Dd1F0a5D5D62952CFb866"
+  },
+  "api": {
+    "hyperliquidEndpoint": "https://api.hyperliquid-testnet.xyz",
+    "wsEndpoint": "wss://api.hyperliquid-testnet.xyz/ws",
+    "backendUrl": "http://localhost:5169/api"
+  },
+  "features": {
+    "maxDepositAmount": "10000000",
+    "depositTimeout": 3600,
+    "withdrawalDelay": 300,
+    "emergencyWithdrawalDelay": 3600,
+    "dailyWithdrawalLimit": "100000000"
+  },
+  "security": {
+    "requireHttps": false,
+    "corsOrigins": ["http://localhost:3000", "http://localhost:3001"],
+    "rateLimitPerMinute": 120,
+    "maxConcurrentRequests": 20
+  },
+  "monitoring": {
+    "sentryDsn": "",
+    "loggingLevel": "debug",
+    "metricsEndpoint": ""
+  }
+}

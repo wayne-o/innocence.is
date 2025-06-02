@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using InnocenceAPI.Models;
 
 namespace InnocenceAPI.Services
@@ -18,8 +19,8 @@ namespace InnocenceAPI.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<HyperCoreIntegrationService> _logger;
 
-        // HyperCore mainnet API endpoint
-        private const string HYPERCORE_API_URL = "https://api.hyperliquid.xyz/info";
+        // HyperCore API endpoint is now configured via appsettings.json
+        private string HyperCoreApiUrl => _configuration["HyperCore:ApiUrl"] ?? "https://api.hyperliquid.xyz/info";
         
         // Cache for asset info to reduce API calls
         private readonly Dictionary<BigInteger, AssetInfo> _assetCache = new();
@@ -53,13 +54,13 @@ namespace InnocenceAPI.Services
                     return _assetCache.Values.ToList();
                 }
 
-                // Query HyperCore API for meta info
+                // Query HyperCore API for spot meta info
                 var request = new
                 {
-                    type = "meta"
+                    type = "spotMeta"
                 };
 
-                var response = await _httpClient.PostAsync(HYPERCORE_API_URL, 
+                var response = await _httpClient.PostAsync(HyperCoreApiUrl, 
                     new StringContent(JsonSerializer.Serialize(request), 
                     System.Text.Encoding.UTF8, "application/json"));
 
@@ -70,49 +71,71 @@ namespace InnocenceAPI.Services
                 }
 
                 var content = await response.Content.ReadAsStringAsync();
-                var metaData = JsonSerializer.Deserialize<HyperCoreMetaResponse>(content);
+                var metaData = JsonSerializer.Deserialize<HyperCoreSpotMetaResponse>(content);
 
-                if (metaData?.Universe == null)
+                if (metaData?.Tokens == null)
                 {
                     return new List<AssetInfo>();
                 }
 
                 var assets = new List<AssetInfo>();
                 
-                // Process spot assets
-                foreach (var spotAsset in metaData.Universe.Where(u => !u.Name.Contains("PERP")))
+                // Process spot tokens - only include major assets for now
+                var majorAssets = new HashSet<string> { "USDC", "UETH", "USDT", "WBTC", "HYPE" };
+                
+                foreach (var token in metaData.Tokens)
                 {
+                    // Filter to only show major assets or canonical tokens
+                    if (!majorAssets.Contains(token.Name.ToUpper()) && !token.IsCanonical)
+                    {
+                        continue;
+                    }
+                    
                     var assetInfo = new AssetInfo
                     {
-                        AssetIdBigInt = new BigInteger(spotAsset.Index),
-                        Symbol = spotAsset.Name,
-                        Name = spotAsset.Name,
-                        Decimals = 8, // HyperCore uses 8 decimals
-                        IsPerp = false,
-                        MinTradeSize = (decimal)spotAsset.MinSize,
-                        SupportsPrivacy = true // All HyperCore assets support privacy
+                        AssetIdBigInt = new BigInteger(token.Index),
+                        Symbol = token.Name,
+                        Name = token.FullName ?? token.Name,
+                        Decimals = token.WeiDecimals + (token.EvmContract?.EvmExtraWeiDecimals ?? 0),
+                        IsPerp = false, // These are all spot assets
+                        MinTradeSize = 0.001m, // Default min trade size
+                        SupportsPrivacy = true, // All HyperCore assets support privacy
+                        CurrentPrice = 0m, // Will be populated by price API
+                        LastUpdated = DateTime.UtcNow
                     };
 
                     assets.Add(assetInfo);
                     _assetCache[assetInfo.AssetIdBigInt] = assetInfo;
                 }
 
-                // Process perp assets
-                foreach (var perpAsset in metaData.Universe.Where(u => u.Name.Contains("PERP")))
+                // Try to fetch current prices
+                try
                 {
-                    var assetInfo = new AssetInfo
-                    {
-                        AssetIdBigInt = new BigInteger(perpAsset.Index),
-                        Symbol = perpAsset.Name,
-                        Name = perpAsset.Name,
-                        Decimals = 8,
-                        IsPerp = true,
-                        MinTradeSize = (decimal)perpAsset.MinSize,
-                        SupportsPrivacy = true
-                    };
+                    var priceRequest = new { type = "allMids" };
+                    var priceResponse = await _httpClient.PostAsync(HyperCoreApiUrl,
+                        new StringContent(JsonSerializer.Serialize(priceRequest),
+                        System.Text.Encoding.UTF8, "application/json"));
 
-                    assets.Add(assetInfo);
-                    _assetCache[assetInfo.AssetIdBigInt] = assetInfo;
+                    if (priceResponse.IsSuccessStatusCode)
+                    {
+                        var priceContent = await priceResponse.Content.ReadAsStringAsync();
+                        var prices = JsonSerializer.Deserialize<Dictionary<string, string>>(priceContent);
+                        
+                        if (prices != null)
+                        {
+                            foreach (var asset in assets)
+                            {
+                                if (prices.ContainsKey(asset.Symbol))
+                                {
+                                    asset.CurrentPrice = decimal.Parse(prices[asset.Symbol]);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to fetch asset prices, continuing without prices");
                 }
 
                 _lastCacheUpdate = DateTime.UtcNow;
@@ -143,7 +166,7 @@ namespace InnocenceAPI.Services
                     type = "allMids"
                 };
 
-                var response = await _httpClient.PostAsync(HYPERCORE_API_URL,
+                var response = await _httpClient.PostAsync(HyperCoreApiUrl,
                     new StringContent(JsonSerializer.Serialize(request),
                     System.Text.Encoding.UTF8, "application/json"));
 
@@ -230,62 +253,38 @@ namespace InnocenceAPI.Services
             {
                 new AssetInfo
                 {
-                    AssetIdBigInt = new BigInteger(1),
-                    Symbol = "BTC",
-                    Name = "Bitcoin",
+                    AssetIdBigInt = new BigInteger(0),
+                    Symbol = "USDC",
+                    Name = "USD Coin",
                     Decimals = 8,
                     IsPerp = false,
-                    MinTradeSize = 0.001m,
+                    MinTradeSize = 1m,
                     SupportsPrivacy = true,
-                    CurrentPrice = 50000m,
+                    CurrentPrice = 1m,
                     LastUpdated = DateTime.UtcNow
                 },
                 new AssetInfo
                 {
-                    AssetIdBigInt = new BigInteger(2),
-                    Symbol = "ETH",
-                    Name = "Ethereum",
-                    Decimals = 8,
+                    AssetIdBigInt = new BigInteger(1242),
+                    Symbol = "UETH",
+                    Name = "Unit Ethereum",
+                    Decimals = 9,
                     IsPerp = false,
-                    MinTradeSize = 0.01m,
+                    MinTradeSize = 0.001m,
                     SupportsPrivacy = true,
                     CurrentPrice = 3000m,
                     LastUpdated = DateTime.UtcNow
                 },
                 new AssetInfo
                 {
-                    AssetIdBigInt = new BigInteger(3),
-                    Symbol = "SOL",
-                    Name = "Solana",
-                    Decimals = 8,
+                    AssetIdBigInt = new BigInteger(1105),
+                    Symbol = "HYPE",
+                    Name = "HyperLiquid",
+                    Decimals = 18, // 8 wei decimals + 10 extra EVM decimals
                     IsPerp = false,
                     MinTradeSize = 0.1m,
                     SupportsPrivacy = true,
-                    CurrentPrice = 100m,
-                    LastUpdated = DateTime.UtcNow
-                },
-                new AssetInfo
-                {
-                    AssetIdBigInt = new BigInteger(101),
-                    Symbol = "BTC-PERP",
-                    Name = "Bitcoin Perpetual",
-                    Decimals = 8,
-                    IsPerp = true,
-                    MinTradeSize = 0.001m,
-                    SupportsPrivacy = true,
-                    CurrentPrice = 50000m,
-                    LastUpdated = DateTime.UtcNow
-                },
-                new AssetInfo
-                {
-                    AssetIdBigInt = new BigInteger(102),
-                    Symbol = "ETH-PERP",
-                    Name = "Ethereum Perpetual",
-                    Decimals = 8,
-                    IsPerp = true,
-                    MinTradeSize = 0.01m,
-                    SupportsPrivacy = true,
-                    CurrentPrice = 3000m,
+                    CurrentPrice = 25m,
                     LastUpdated = DateTime.UtcNow
                 }
             };
@@ -301,17 +300,49 @@ namespace InnocenceAPI.Services
         }
 
         // HyperCore API response models
-        private class HyperCoreMetaResponse
+        private class HyperCoreSpotMetaResponse
         {
-            public List<UniverseItem> Universe { get; set; } = new();
+            [JsonPropertyName("tokens")]
+            public List<SpotToken> Tokens { get; set; } = new();
+            
+            [JsonPropertyName("universe")]
+            public List<object> Universe { get; set; } = new();
         }
 
-        private class UniverseItem
+        private class SpotToken
         {
+            [JsonPropertyName("name")]
             public string Name { get; set; } = string.Empty;
+            
+            [JsonPropertyName("szDecimals")]
+            public int SzDecimals { get; set; }
+            
+            [JsonPropertyName("weiDecimals")]
+            public int WeiDecimals { get; set; }
+            
+            [JsonPropertyName("index")]
             public int Index { get; set; }
-            public double MinSize { get; set; }
-            public double MaxSize { get; set; }
+            
+            [JsonPropertyName("tokenId")]
+            public string TokenId { get; set; } = string.Empty;
+            
+            [JsonPropertyName("isCanonical")]
+            public bool IsCanonical { get; set; }
+            
+            [JsonPropertyName("fullName")]
+            public string? FullName { get; set; }
+            
+            [JsonPropertyName("evmContract")]
+            public EvmContractInfo? EvmContract { get; set; }
+        }
+        
+        private class EvmContractInfo
+        {
+            [JsonPropertyName("address")]
+            public string Address { get; set; } = string.Empty;
+            
+            [JsonPropertyName("evm_extra_wei_decimals")]
+            public int EvmExtraWeiDecimals { get; set; }
         }
     }
 }

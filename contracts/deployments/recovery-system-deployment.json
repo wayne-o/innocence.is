@@ -1,0 +1,15 @@
+{
+  "network": "hyperevm_mainnet",
+  "timestamp": "2025-06-02T09:26:43.816Z",
+  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "type": "PURE_EVM_PRIVACY_SYSTEM_WITH_RECOVERY",
+  "contracts": {
+    "mockSP1Verifier": "0xC55664b68E495Cd32BFFdAf53b881a60A5baCfd5",
+    "privacySystemEVMWithRecovery": "0x38957E2052AfFff204C4EA8Ae88cDA805C58B7b9",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203"
+  },
+  "emergencyFunctions": {
+    "emergencyWithdraw": "emergencyWithdraw(address,uint64,uint256,string)",
+    "emergencyWithdrawAll": "emergencyWithdrawAll(address,string)"
+  }
+}

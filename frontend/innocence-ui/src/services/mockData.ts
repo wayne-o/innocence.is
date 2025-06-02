@@ -6,7 +6,7 @@ export const mockAssets: HyperCoreAsset[] = [
   {
     assetId: '0', // USDC
     symbol: 'USDC',
-    name: 'USD Coin',
+    name: 'USDC (Hyperliquid)',
     currentPrice: 1.0,
     supportsPrivacy: true,
     isPerp: false,
@@ -14,9 +14,19 @@ export const mockAssets: HyperCoreAsset[] = [
     minTradeSize: 10, // $10 minimum
   },
   {
+    assetId: '1242', // UETH
+    symbol: 'UETH',
+    name: 'Unit Ethereum',
+    currentPrice: 3000,
+    supportsPrivacy: true,
+    isPerp: false,
+    decimals: 18, // EVM uses 18 decimals (9 wei + 9 extra)
+    minTradeSize: 0.001, // 0.001 UETH minimum
+  },
+  {
     assetId: '1', // BTC spot
     symbol: 'BTC',
-    name: 'Bitcoin',
+    name: 'Bitcoin (Hyperliquid)',
     currentPrice: 50000,
     supportsPrivacy: true,
     isPerp: false,
@@ -26,7 +36,7 @@ export const mockAssets: HyperCoreAsset[] = [
   {
     assetId: '2', // ETH spot
     symbol: 'ETH',
-    name: 'Ethereum',
+    name: 'Ethereum (Hyperliquid)',
     currentPrice: 3000,
     supportsPrivacy: true,
     isPerp: false,

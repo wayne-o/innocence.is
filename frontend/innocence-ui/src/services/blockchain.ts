@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BrowserProvider, JsonRpcProvider, Contract, Interface, AbiCoder, keccak256, toUtf8Bytes, TransactionResponse, Provider, Signer } from 'ethers';
 import { PrivateDeposit, PrivateTrade, PrivateWithdrawal } from '../types';
 
 // Contract ABI for V3 (updated to match HyperCore precompile types)
@@ -22,10 +22,10 @@ declare global {
 }
 
 export class PrivacySystemService {
-  private provider: ethers.Provider | null = null;
-  private signer?: ethers.Signer;
+  private provider: Provider | null = null;
+  private signer?: Signer;
   private contractAddress: string;
-  private contract?: ethers.Contract;
+  private contract?: Contract;
   private listeners: Array<() => void> = [];
 
   constructor(contractAddress: string) {
@@ -41,12 +41,12 @@ export class PrivacySystemService {
     console.log('RPC URL:', process.env.REACT_APP_RPC_URL);
   }
 
-  private getProvider(): ethers.Provider {
+  private getProvider(): Provider {
     if (!this.provider) {
       if (window.ethereum) {
-        this.provider = new ethers.BrowserProvider(window.ethereum);
+        this.provider = new BrowserProvider(window.ethereum);
       } else {
-        this.provider = new ethers.JsonRpcProvider(
+        this.provider = new JsonRpcProvider(
           process.env.REACT_APP_RPC_URL || 'https://rpc.hyperliquid-testnet.xyz/evm'
         );
       }
@@ -62,13 +62,13 @@ export class PrivacySystemService {
     // Clean up any existing provider
     this.cleanup();
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     this.provider = provider;
     this.signer = await provider.getSigner();
 
     // Initialize contract
-    this.contract = new ethers.Contract(
+    this.contract = new Contract(
       this.contractAddress,
       PRIVACY_SYSTEM_ABI,
       this.signer
@@ -84,7 +84,7 @@ export class PrivacySystemService {
     if (!this.signer || !this.contract) {
       // Try to reconnect using existing provider
       if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
+        const provider = new BrowserProvider(window.ethereum);
         const accounts = await provider.send("eth_accounts", []);
         if (accounts.length > 0) {
           // Clean up old provider first
@@ -92,7 +92,7 @@ export class PrivacySystemService {
           
           this.provider = provider;
           this.signer = await provider.getSigner();
-          this.contract = new ethers.Contract(
+          this.contract = new Contract(
             this.contractAddress,
             PRIVACY_SYSTEM_ABI,
             this.signer
@@ -104,7 +104,7 @@ export class PrivacySystemService {
     }
   }
 
-  async deposit(params: PrivateDeposit): Promise<ethers.TransactionResponse> {
+  async deposit(params: PrivateDeposit): Promise<TransactionResponse> {
     await this.ensureConnected();
     
     if (!this.contract || !this.signer) {
@@ -124,8 +124,8 @@ export class PrivacySystemService {
         params.commitment,
         token,
         amount,
-        ethers.toUtf8Bytes(params.certificate || ''),
-        ethers.toUtf8Bytes(params.signature || '')
+        toUtf8Bytes(params.certificate || ''),
+        toUtf8Bytes(params.signature || '')
       );
 
       return tx;
@@ -137,13 +137,13 @@ export class PrivacySystemService {
         console.log('ENS error detected, using raw transaction approach...');
         
         // Encode the function call with uint64 types
-        const iface = new ethers.Interface(PRIVACY_SYSTEM_ABI);
+        const iface = new Interface(PRIVACY_SYSTEM_ABI);
         const data = iface.encodeFunctionData('deposit', [
           params.commitment,
           BigInt(params.asset),
           BigInt(params.amount),
-          ethers.toUtf8Bytes(params.certificate || ''),
-          ethers.toUtf8Bytes(params.signature || '')
+          toUtf8Bytes(params.certificate || ''),
+          toUtf8Bytes(params.signature || '')
         ]);
         
         // Use window.ethereum directly to send transaction
@@ -172,14 +172,14 @@ export class PrivacySystemService {
         if (!tx) {
           throw new Error('Transaction not found');
         }
-        return tx as ethers.TransactionResponse;
+        return tx as TransactionResponse;
       }
       
       throw error;
     }
   }
 
-  async privateSpotTrade(params: PrivateTrade): Promise<ethers.TransactionResponse> {
+  async privateSpotTrade(params: PrivateTrade): Promise<TransactionResponse> {
     await this.ensureConnected();
     
     if (!this.contract || !this.signer) {
@@ -198,7 +198,7 @@ export class PrivacySystemService {
     return tx;
   }
 
-  async withdraw(params: PrivateWithdrawal): Promise<ethers.TransactionResponse> {
+  async withdraw(params: PrivateWithdrawal): Promise<TransactionResponse> {
     await this.ensureConnected();
     
     if (!this.contract || !this.signer) {
@@ -219,7 +219,7 @@ export class PrivacySystemService {
   async getMerkleRoot(): Promise<string> {
     if (!this.contract) {
       const provider = this.getProvider();
-      this.contract = new ethers.Contract(
+      this.contract = new Contract(
         this.contractAddress,
         PRIVACY_SYSTEM_ABI,
         provider
@@ -232,7 +232,7 @@ export class PrivacySystemService {
   async isCommitmentUsed(commitment: string): Promise<boolean> {
     if (!this.contract) {
       const provider = this.getProvider();
-      this.contract = new ethers.Contract(
+      this.contract = new Contract(
         this.contractAddress,
         PRIVACY_SYSTEM_ABI,
         provider
@@ -245,7 +245,7 @@ export class PrivacySystemService {
   async isNullifierUsed(nullifier: string): Promise<boolean> {
     if (!this.contract) {
       const provider = this.getProvider();
-      this.contract = new ethers.Contract(
+      this.contract = new Contract(
         this.contractAddress,
         PRIVACY_SYSTEM_ABI,
         provider
@@ -257,8 +257,8 @@ export class PrivacySystemService {
 
   generateCommitment(secret: string, nullifier: string): string {
     // Generate commitment hash from secret and nullifier
-    const hash = ethers.keccak256(
-      ethers.AbiCoder.defaultAbiCoder().encode(
+    const hash = keccak256(
+      AbiCoder.defaultAbiCoder().encode(
         ['string', 'string'],
         [secret, nullifier]
       )
@@ -267,7 +267,7 @@ export class PrivacySystemService {
   }
 
   generateNullifierHash(nullifier: string): string {
-    return ethers.keccak256(ethers.toUtf8Bytes(nullifier));
+    return keccak256(toUtf8Bytes(nullifier));
   }
   
   // Clean up any listeners and provider
@@ -302,7 +302,7 @@ export class PrivacySystemService {
   async hasValidCertificate(address: string): Promise<boolean> {
     if (!this.contract) {
       const provider = this.getProvider();
-      this.contract = new ethers.Contract(
+      this.contract = new Contract(
         this.contractAddress,
         PRIVACY_SYSTEM_ABI,
         provider

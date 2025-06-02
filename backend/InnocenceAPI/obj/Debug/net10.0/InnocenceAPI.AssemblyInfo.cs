@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InnocenceAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f50d48107e2fb69799358f9397511d4cf7edb5f")]
 [assembly: System.Reflection.AssemblyProductAttribute("InnocenceAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InnocenceAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

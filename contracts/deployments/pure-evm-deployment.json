@@ -1,0 +1,20 @@
+{
+  "network": "hyperevm_mainnet",
+  "timestamp": "2025-06-02T08:19:16.956Z",
+  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "type": "PURE_EVM_PRIVACY_SYSTEM",
+  "contracts": {
+    "mockSP1Verifier": "0xC55664b68E495Cd32BFFdAf53b881a60A5baCfd5",
+    "privacySystemEVM": "0x60564ff628987871EFFF0A2Ec8b6EF722895152e",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203"
+  },
+  "tokenMappings": {
+    "0": "0x0000000000000000000000000000000000000000",
+    "150": "NATIVE"
+  },
+  "config": {
+    "maxDepositAmount": "1000000000000000000",
+    "depositTimeout": 1800,
+    "withdrawalDelay": 0
+  }
+}

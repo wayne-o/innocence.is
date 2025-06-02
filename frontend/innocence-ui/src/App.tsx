@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { PrivacySystemService } from './services/blockchain';
-import { PrivateDeposit } from './components/PrivateDeposit';
-import { switchToHyperliquidTestnet } from './utils/metamask-config';
+import { PrivacySystemService } from './services/blockchain-v4';
+import { PrivateDepositEVM } from './components/PrivateDepositEVM';
+import { PrivateWithdraw } from './components/PrivateWithdraw';
+import { PrivateTrade } from './components/PrivateTrade';
+import { PrivateBalances } from './components/PrivateBalances';
+import { PrivatePortfolio } from './components/PrivatePortfolio';
+import { switchToHyperliquidTestnet, switchToHyperliquidMainnet } from './utils/metamask-config';
 import './App.css';
 
-// Contract address - V3 deployment on testnet
-const PRIVACY_SYSTEM_ADDRESS = (process.env.REACT_APP_CONTRACT_ADDRESS || '0x62040EF8551cE0ad550fE9f37683E59db7603358').trim();
+// Contract address from environment
+const PRIVACY_SYSTEM_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS || '0x669E4933eE72a35eBC0c00f9C3084ce46e4424c4';
 
 declare global {
   interface Window {
@@ -17,7 +21,7 @@ function App() {
   const [privacySystem] = useState(() => new PrivacySystemService(PRIVACY_SYSTEM_ADDRESS));
   const [connected, setConnected] = useState(false);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'deposit' | 'trade' | 'withdraw'>('deposit');
+  const [activeTab, setActiveTab] = useState<'deposit' | 'trade' | 'withdraw' | 'balances' | 'portfolio'>('deposit');
 
   useEffect(() => {
     checkConnection();
@@ -76,7 +80,12 @@ function App() {
   const handleConnect = async () => {
     try {
       // First ensure we're on the correct network
-      await switchToHyperliquidTestnet();
+      // Switch to mainnet or testnet based on environment
+      if (process.env.REACT_APP_NETWORK === 'mainnet') {
+        await switchToHyperliquidMainnet();
+      } else {
+        await switchToHyperliquidTestnet();
+      }
       
       const address = await privacySystem.connect();
       setUserAddress(address);
@@ -164,26 +173,50 @@ function App() {
               >
                 Withdraw
               </button>
+              <button 
+                className={activeTab === 'balances' ? 'active' : ''}
+                onClick={() => setActiveTab('balances')}
+              >
+                Balances
+              </button>
+              <button 
+                className={activeTab === 'portfolio' ? 'active' : ''}
+                onClick={() => setActiveTab('portfolio')}
+              >
+                Portfolio
+              </button>
             </nav>
 
             <div className="tab-content">
               {activeTab === 'deposit' && (
-                <PrivateDeposit 
+                <PrivateDepositEVM 
                   privacySystem={privacySystem}
                   userAddress={userAddress!}
                 />
               )}
               {activeTab === 'trade' && (
-                <div className="coming-soon">
-                  <h2>Private Trading</h2>
-                  <p>Trade HyperCore assets privately - Coming soon!</p>
-                </div>
+                <PrivateTrade 
+                  privacySystem={privacySystem}
+                  userAddress={userAddress!}
+                />
               )}
               {activeTab === 'withdraw' && (
-                <div className="coming-soon">
-                  <h2>Private Withdrawal</h2>
-                  <p>Withdraw your funds privately - Coming soon!</p>
-                </div>
+                <PrivateWithdraw 
+                  privacySystem={privacySystem}
+                  userAddress={userAddress!}
+                />
+              )}
+              {activeTab === 'balances' && (
+                <PrivateBalances 
+                  privacySystem={privacySystem}
+                  userAddress={userAddress!}
+                />
+              )}
+              {activeTab === 'portfolio' && (
+                <PrivatePortfolio 
+                  privacySystem={privacySystem}
+                  userAddress={userAddress!}
+                />
               )}
             </div>
           </>

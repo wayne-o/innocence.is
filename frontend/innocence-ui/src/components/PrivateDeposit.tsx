@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { ethers } from 'ethers';
+import React, { useState, useEffect } from 'react';
+import { formatUnits, parseUnits } from 'ethers';
 import { HyperCoreAsset } from '../types';
 import { complianceAPI } from '../services/api';
-import { PrivacySystemService } from '../services/blockchain';
+import { PrivacySystemService } from '../services/blockchain-v4';
+import proofService from '../services/proofService';
 import { AssetSelector } from './AssetSelector';
 import './PrivateDeposit.css';
 
@@ -14,16 +15,45 @@ interface PrivateDepositProps {
 export function PrivateDeposit({ privacySystem, userAddress }: PrivateDepositProps) {
   const [selectedAsset, setSelectedAsset] = useState<HyperCoreAsset | null>(null);
   const [amount, setAmount] = useState('');
-  const [secret, setSecret] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showAssetSelector, setShowAssetSelector] = useState(false);
-  const [usingMockCompliance, setUsingMockCompliance] = useState(false);
+  const [generatingProof, setGeneratingProof] = useState(false);
+  const [userBalance, setUserBalance] = useState<string>('0');
+
+  // Check user balance when asset is selected
+  useEffect(() => {
+    const checkBalance = async () => {
+      if (selectedAsset && userAddress) {
+        try {
+          const balance = await privacySystem.getUserSpotBalance(
+            userAddress, 
+            parseInt(selectedAsset.assetId)
+          );
+          setUserBalance(formatUnits(balance, selectedAsset.decimals));
+        } catch (err) {
+          console.error('Failed to fetch balance:', err);
+          setUserBalance('0');
+        }
+      }
+    };
+    
+    checkBalance();
+  }, [selectedAsset, userAddress, privacySystem]);
 
   const handleDeposit = async () => {
-    if (!selectedAsset || !amount || !secret) {
+    if (!selectedAsset || !amount) {
       setError('Please fill all fields');
+      return;
+    }
+
+    // Check if user has sufficient balance
+    const requestedAmount = parseFloat(amount);
+    const availableBalance = parseFloat(userBalance);
+    
+    if (requestedAmount > availableBalance) {
+      setError(`Insufficient balance. You have ${availableBalance} ${selectedAsset.symbol}`);
       return;
     }
 
@@ -32,101 +62,100 @@ export function PrivateDeposit({ privacySystem, userAddress }: PrivateDepositPro
       setError(null);
       setSuccess(null);
 
-      // Generate commitment and nullifier
-      const nullifier = ethers.randomBytes(32);
-      const nullifierHex = ethers.hexlify(nullifier);
-      const commitment = privacySystem.generateCommitment(secret, nullifierHex);
+      // Generate random secret and nullifier
+      const secret = proofService.generateSecret();
+      const nullifier = proofService.generateNullifier();
+      
+      // Generate compliance proof
+      setGeneratingProof(true);
+      const { commitment, proofBytes, publicValues } = await proofService.generateDepositProof(
+        secret,
+        nullifier
+      );
+      setGeneratingProof(false);
 
-      // Request compliance certificate
-      let complianceCheck;
-      try {
-        const response = await fetch(process.env.REACT_APP_API_URL + '/compliance/check', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            address: userAddress,
-            requestedAmount: parseFloat(amount),
-            requestedAssets: [selectedAsset.assetId],
-            requiresPerps: false,
-            transactionHash: '',
-          })
-        });
-        if (!response.ok) throw new Error('Backend not available');
-        complianceCheck = await response.json();
-        setUsingMockCompliance(false);
-      } catch (err) {
-        // Use mock compliance if backend is not available
-        complianceCheck = await complianceAPI.checkCompliance({
-          address: userAddress,
-          requestedAmount: parseFloat(amount),
-          requestedAssets: [selectedAsset.assetId],
-          requiresPerps: false,
-          transactionHash: '',
-        });
-        setUsingMockCompliance(true);
-      }
+      // Store commitment data securely
+      proofService.storeCommitmentData(commitment, secret, nullifier);
 
-      if (!complianceCheck.isCompliant) {
-        setError(`Compliance check failed: ${complianceCheck.reasons.join(', ')}`);
-        return;
-      }
-
-      // Execute deposit
-      const amountWei = ethers.parseUnits(amount, selectedAsset.decimals);
+      // Execute deposit with ZK proof
+      const amountWei = parseUnits(amount, selectedAsset.decimals);
       
       console.log('Deposit params:', {
         commitment,
         asset: selectedAsset.assetId,
         amount: amountWei.toString(),
-        certificate: complianceCheck.certificateId,
-        signature: complianceCheck.signature,
+        proof: proofBytes.slice(0, 66) + '...',
       });
       
-      const tx = await privacySystem.deposit({
+      const tx = await privacySystem.depositWithProof({
         commitment,
-        asset: selectedAsset.assetId,
+        token: parseInt(selectedAsset.assetId),
         amount: amountWei.toString(),
-        certificate: complianceCheck.certificateId || '',
-        signature: complianceCheck.signature || '',
+        complianceProof: proofBytes,
+        publicValues: publicValues,
       });
 
-      await tx.wait();
+      console.log('Transaction submitted:', tx.hash);
+      
+      try {
+        const receipt = await tx.wait();
+        console.log('Transaction confirmed:', receipt);
+        
+        // Save deposit info locally
+        const depositInfo = {
+          commitment,
+          asset: selectedAsset.assetId,
+          amount: amountWei.toString(),
+          txHash: tx.hash,
+          timestamp: Date.now(),
+        };
 
-      // Save deposit info locally (in production, use secure storage)
-      const depositInfo = {
+        localStorage.setItem(
+          `deposit_${commitment}`,
+          JSON.stringify(depositInfo)
+        );
+
+        setSuccess(`Private deposit successful! Save this commitment: ${commitment}`);
+        setAmount('');
+      } catch (waitError) {
+        console.error('Error waiting for transaction:', waitError);
+        // Transaction might still be pending
+        setSuccess(`Transaction submitted! TX Hash: ${tx.hash}`);
+      }
+      
+      // Show download link for commitment data
+      const downloadData = {
         commitment,
-        nullifier: nullifierHex,
-        asset: selectedAsset.assetId,
-        amount: amountWei.toString(),
-        txHash: tx.hash,
-        timestamp: Date.now(),
+        secret,
+        nullifier,
+        asset: selectedAsset.symbol,
+        amount: amount,
+        timestamp: new Date().toISOString()
       };
-
-      localStorage.setItem(
-        `deposit_${commitment}`,
-        JSON.stringify(depositInfo)
-      );
-
-      setSuccess(`Deposit successful! Commitment: ${commitment.slice(0, 10)}...`);
-      setAmount('');
-      setSecret('');
+      
+      const blob = new Blob([JSON.stringify(downloadData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `innocence-deposit-${commitment.slice(0, 8)}.json`;
+      link.click();
+      
     } catch (err: any) {
       setError(err.message || 'Deposit failed');
       console.error('Deposit error:', err);
     } finally {
       setLoading(false);
+      setGeneratingProof(false);
     }
   };
 
   return (
     <div className="private-deposit">
-      <h2>Private Deposit</h2>
-      
-      {usingMockCompliance && (
-        <div className="mock-compliance-banner">
-          ⚠️ Using mock compliance - Backend not available
-        </div>
-      )}
+      <h2>Private Deposit with ZK Proof</h2>
+      <p className="deposit-explanation">
+        Transfer Hyperliquid spot balances into a private vault. These are account balances 
+        within Hyperliquid's L1, not ERC-20 tokens.
+      </p>
       
       <div className="deposit-form">
         <div className="form-group">
@@ -157,22 +186,18 @@ export function PrivateDeposit({ privacySystem, userAddress }: PrivateDepositPro
           />
           {selectedAsset && (
             <div className="input-hint">
-              Min: {selectedAsset.minTradeSize} {selectedAsset.symbol}
+              <div>Min: {selectedAsset.minTradeSize} {selectedAsset.symbol}</div>
+              <div style={{ color: parseFloat(userBalance) === 0 ? '#ff4444' : '#00ff64' }}>
+                Available: {userBalance} {selectedAsset.symbol}
+              </div>
             </div>
           )}
         </div>
 
-        <div className="form-group">
-          <label>Secret (save this!)</label>
-          <input
-            type="password"
-            placeholder="Enter a secret phrase"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-          />
-          <div className="input-hint">
-            This secret is required to withdraw your funds. Keep it safe!
-          </div>
+        <div className="info-box">
+          <p>💡 You're depositing Hyperliquid spot balances (not actual BTC/ETH)</p>
+          <p>🔐 Your deposit will be protected by zero-knowledge proofs</p>
+          <p>📥 A secret file will be downloaded - keep it safe to withdraw later!</p>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -181,9 +206,11 @@ export function PrivateDeposit({ privacySystem, userAddress }: PrivateDepositPro
         <button
           className="deposit-btn"
           onClick={handleDeposit}
-          disabled={loading || !selectedAsset || !amount || !secret}
+          disabled={loading || !selectedAsset || !amount}
         >
-          {loading ? 'Processing...' : 'Deposit Privately'}
+          {generatingProof ? 'Generating ZK Proof...' : 
+           loading ? 'Processing Transaction...' : 
+           'Deposit Privately'}
         </button>
       </div>
 

@@ -22,25 +22,21 @@ export function AssetSelector({ onAssetSelect, filterPerps = false }: AssetSelec
   const fetchHyperCoreAssets = async () => {
     try {
       setLoading(true);
-      const response = await fetch(process.env.REACT_APP_API_URL + '/hypercore/assets');
-      if (!response.ok) {
-        throw new Error('Backend not available');
-      }
-      const assetsData = await response.json();
-      const filteredAssets = assetsData.filter((asset: HyperCoreAsset) => 
-        asset.supportsPrivacy && (filterPerps ? !asset.isPerp : true)
-      );
-      setAssets(filteredAssets);
-      setUsingMockData(false);
-    } catch (err) {
-      // If backend is not available, use mock data
       const assetsData = await hyperCoreAPI.getAssets();
       const filteredAssets = assetsData.filter(asset => 
         asset.supportsPrivacy && (filterPerps ? !asset.isPerp : true)
       );
       setAssets(filteredAssets);
-      setUsingMockData(true);
-      console.log('Using mock data for assets');
+      
+      // Check if we're using mock data (hyperCoreAPI handles this internally)
+      if (assetsData.length > 0 && assetsData[0].name.includes('(Hyperliquid)')) {
+        setUsingMockData(true);
+      } else {
+        setUsingMockData(false);
+      }
+    } catch (err) {
+      console.error('Failed to fetch assets:', err);
+      setError('Failed to load assets');
     } finally {
       setLoading(false);
     }

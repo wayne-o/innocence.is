@@ -1,0 +1,694 @@
+
+> innocence-proof-service@1.0.0 start
+> node index.js
+
+Proof service running on port 3003
+ZK circuits path: /Users/waynedouglas/github/wayne-o/innocence/zk-circuits/innocence-circuits
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0xa20d34eb25c3d41845195cd37dc988527579bfbc17146b2fb49a640c229dae47
+Asset ID: 150
+Actual Balance: 10000000
+Min Balance: 1000000
+Merkle Root: 0x0d03e3895c875075ca5da64cda9e724cc88ea6ea03eca7465938927bd4243b47
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Returning cached proof for balance
+Returning cached proof for balance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x3769db99ed4c1c8be0a4fe32ff749d22ef64d11b82647e66d0e236fb96faacce
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780386142 (2026-06-02 07:42:22 UTC)
+Certificate Hash: 0x3038cfb1a61901d93606632926626577e7868329e53fbd7f05c667f3806488f6
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x6e531e3fb79ce9940f7271faba318fdf7e7672bb12c5c93e1d3e4671a3c82df0
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780386248 (2026-06-02 07:44:08 UTC)
+Certificate Hash: 0x8b36e1daaa42b4f51e1c3f10eb2cc534b82daee5ee6b439f8c8decce18461893
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780386436 (2026-06-02 07:47:16 UTC)
+Certificate Hash: 0x00ab14d21410eccd37f83a556dff58df28293862373df9da7948183f8455196c
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 24000000
+Min Balance: 12000000
+Merkle Root: 0x997619bb9a723c781c8303af5c1593a70536e93e9b77efe57143ed9a23626fe4
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Returning cached proof for balance
+Returning cached proof for balance
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 100000000
+Min Balance: 1000000
+Merkle Root: 0x2bdb563ebfacabdecb9bbd9a41d3685f63c686463f8dfbbf8284909bdb092d14
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating balance proof...
+error: unexpected argument '-1' found
+
+Usage: balance-proof [OPTIONS]
+
+For more information, try '--help'.
+Error generating balance proof: Error: Command failed: cd /Users/waynedouglas/github/wayne-o/innocence/zk-circuits/innocence-circuits && ./target/release/balance-proof --prove --secret 0xa082b7e8cad89f7e160b6671e669b411d10922fef9e75175b23f3fa576f225ca --nullifier 0x2d4ee0ce33b1ff5ecf57eb2c3e7e4648c8ba462719075c30258e7ae18925c5df --balance 100000000 --min-balance -1000000000 --asset-id 150
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at execSync (node:child_process:954:15)
+    at /Users/waynedouglas/github/wayne-o/innocence/proof-service/index.js:94:5
+    at Layer.handle [as handle_request] (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/index.js:284:15 {
+  status: 2,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 52379,
+  stdout: null,
+  stderr: null
+}
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 100000000
+Min Balance: 10000000
+Merkle Root: 0x2bdb563ebfacabdecb9bbd9a41d3685f63c686463f8dfbbf8284909bdb092d14
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 120000000
+Min Balance: 1000000000
+Merkle Root: 0x91dd9c6c4743e6cd2370a373d96557256c329aefb54899c0f1e18bd0aafe9162
+
+Setting up proving keys...
+Generating proof...
+stderr: 
+stderr: thread '<unnamed>' panicked at balance-proof/src/main.rs:56:5:
+stderr: Insufficient balance: 120000000 < 1000000000
+stderr: stack backtrace:
+stderr: note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+
+thread '<unnamed>' panicked at /Users/waynedouglas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sp1-core-machine-4.2.0/src/utils/prove.rs:517:67:
+called `Result::unwrap()` on an `Err` value: ExecutionError(HaltWithNonZeroExitCode(1))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' panicked at /Users/waynedouglas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sp1-prover-4.2.0/src/lib.rs:462:64:
+called `Result::unwrap()` on an `Err` value: Any { .. }
+Error generating balance proof: Error: Command failed: cd /Users/waynedouglas/github/wayne-o/innocence/zk-circuits/innocence-circuits && ./target/release/balance-proof --prove --secret 0xa082b7e8cad89f7e160b6671e669b411d10922fef9e75175b23f3fa576f225ca --nullifier 0x2d4ee0ce33b1ff5ecf57eb2c3e7e4648c8ba462719075c30258e7ae18925c5df --balance 120000000 --min-balance 1000000000 --asset-id 150
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at execSync (node:child_process:954:15)
+    at /Users/waynedouglas/github/wayne-o/innocence/proof-service/index.js:94:5
+    at Layer.handle [as handle_request] (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/waynedouglas/github/wayne-o/innocence/proof-service/node_modules/express/lib/router/index.js:284:15 {
+  status: 101,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 52689,
+  stdout: null,
+  stderr: null
+}
+Returning cached proof for balance
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 20000000
+Min Balance: 10000000
+Merkle Root: 0x11557c0778462c1377bc8c5661094d2a6186d0b1c45c3fd3e83aecbac880312d
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x7df38bf40b27b4411e69728cf96d9828747b68d7f9b847b34068e4a77794e5d9
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x4a28430e37235f645e83f8f3b12eb36ca5af181790863066127ce80cb5ca5932
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x130f2053411897ef078c4282f97dc1dd7785ad3005425a08be150dabf0a4ab39
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780388506 (2026-06-02 08:21:46 UTC)
+Certificate Hash: 0xda6913196f749a6ae6cfc23e16c09ea91b411c99af7fe2615b97599ae9de3485
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x130f2053411897ef078c4282f97dc1dd7785ad3005425a08be150dabf0a4ab39
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0xf2843d112a4957359e698b3b02cdd6985901b61a4ff57229155e49e893455d5f
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x47edec7a922ed3a367da947d7fdd530c7e14c0beea7eb6428a1f94282af186d3
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780388598 (2026-06-02 08:23:18 UTC)
+Certificate Hash: 0x06463aad98115780ad93fb7c57e2c3942781b24796b2a6afa92e60ba65647209
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x47edec7a922ed3a367da947d7fdd530c7e14c0beea7eb6428a1f94282af186d3
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0xb087d55450497bb352cee9073a23953af408673253751e10923f63c909185950
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xab429ef0d2969beb3089a225abb9610bf3d5080c95fbc6fe9229c8fd693cdd27
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780388782 (2026-06-02 08:26:22 UTC)
+Certificate Hash: 0x21aef2141c32f7179f41cbdc737f8cba916651f142ae7f33ee06916755c75279
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xeef029a8e3fdba1b3d59ffc6dc2c91bc46199fc6e0d6a418543276cf08ec3087
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780388910 (2026-06-02 08:28:30 UTC)
+Certificate Hash: 0xafe45285cbd536528e35382757d6868e7124409297768fe3e072f2ec9d5453d4
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x193d89662f274c2f6bc921a530fd3339650fab2529099b33c4ff41f52bba2111
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780389189 (2026-06-02 08:33:09 UTC)
+Certificate Hash: 0xaa272f714dad2c99231c5361a92a321f2f40be1e18c893eb9b2e589ab239e2f4
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xd9f7a7f89b874f1ab539acdaf56176e1c1b793ddc7e100927815af9c5aa03aab
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780391682 (2026-06-02 09:14:42 UTC)
+Certificate Hash: 0x969337adf8e1ea6e54bdb038317fb09a596262e804ee8dbf4ac810d52f99428b
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0xd9f7a7f89b874f1ab539acdaf56176e1c1b793ddc7e100927815af9c5aa03aab
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0xa42f0f6606201ef9f1fa560162e14a06d9c6c90819848e6c16d22cafa25296a1
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xf1eecc54c12790de435a44f03b601a06717cd0ada0bf7b874bb83060fadf08e9
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780391768 (2026-06-02 09:16:08 UTC)
+Certificate Hash: 0xc1cd83a2af08634af0341da864c5fae3735d68005ae06e71cf985e1ce7230e85
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x6106d8949d31bf85360e61889fc8988a2243cfe103cbef30102dab913655da1e
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780391898 (2026-06-02 09:18:18 UTC)
+Certificate Hash: 0xb12a04a9179043b465fe664d46eb4ed3b065ce378e3d59462b331a2a40c41601
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Returning cached proof for compliance
+Returning cached proof for compliance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x5e77cb63a6241ca25a3730ff9934a8413bbf0908dd3ee8443c05fc303fd8f37a
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780392162 (2026-06-02 09:22:42 UTC)
+Certificate Hash: 0xa70f362d0f1fcb9da032686c7db646e7d70b2ba75778665bbbd989a78f2c6e6c
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x5e77cb63a6241ca25a3730ff9934a8413bbf0908dd3ee8443c05fc303fd8f37a
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x1a9e8f746c59eea447bcfda6594be907c0acba01da67b0cb037a6b8ffd1697fd
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xaa7b8ff545f6f02cd51f7c8b5e795847db2579aa9b87455bbd772744b9cfe6ab
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780392364 (2026-06-02 09:26:04 UTC)
+Certificate Hash: 0xdb7ff77e1366ea8f96d81e453e18cfda92141f4070f3145ffb0d84b49f6777f5
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Returning cached proof for compliance
+Returning cached proof for compliance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x1a415afc84d627e213328a6252be0a96807debeb1c474e76b02291dc08e3f559
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780392620 (2026-06-02 09:30:20 UTC)
+Certificate Hash: 0x93176059bf3a1a88cf91ee60f30afe40a1c118147d3fbcb84436d9f9b5c668a6
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xe7faad902c47b3115a8b3fae3e180a006da949eba0ef89938c5f71205cd5a48a
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780392787 (2026-06-02 09:33:07 UTC)
+Certificate Hash: 0x62243276c3cce1a31408f57f3bb2fe1bd347c2c12426c0da9f5f21cb0a6a03cf
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x55f65ebd6492d9d48d170fab59ba97b9d9f30b78e67883587457b2c33d818063
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780392861 (2026-06-02 09:34:21 UTC)
+Certificate Hash: 0x808559288fad11243821d48602412e87a4903031a57b4de56052efa74fa91a37
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x55f65ebd6492d9d48d170fab59ba97b9d9f30b78e67883587457b2c33d818063
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x525812b904b8da62c58077e77c47fa75b7d4c9aa9216d951a568bb9b4c2a0fe1
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Returning cached proof for balance
+Returning cached proof for balance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x94dd8331e523ce98cfcc77be309d0dec30956f25a42392f0e8a520ea19a251f4
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780393113 (2026-06-02 09:38:33 UTC)
+Certificate Hash: 0xe077f1c76caf29f6662e841552e334546280db7b702a5bbcba871cee3ed29797
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x270c7932498b261004317a1754ab38daaa38e03849a65fc1b27fe007e2038586
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780393397 (2026-06-02 09:43:17 UTC)
+Certificate Hash: 0x2271b75cb5dffd8fa9d2dac02fee3de353d0f9a00a3560ebb0962d21ac70b34b
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xe75d93b879fab53ca575353ab871d4b2dd6b9722c5fece07314b0fda11f01f30
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780393441 (2026-06-02 09:44:01 UTC)
+Certificate Hash: 0x55e7d0ffc71c74adb6baebc2d3bbb653ce937bdcf717a2c07af3a31782a1ca41
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x504451f624547036eca6992a260c32b1cfc921fc39b4f65527b051943c8c6df4
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780393584 (2026-06-02 09:46:24 UTC)
+Certificate Hash: 0xc8542afef91ac234cdd9f76a433fb959fcd5df3896769f11c7d9e8f9d7c2065b
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x5a65714a468a15fc12f940dad04a8cd9c15a09ff60f7a5c568d5d8d736625f7b
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780393909 (2026-06-02 09:51:49 UTC)
+Certificate Hash: 0x8c79c4c0b205cf6633669c8cc4266ea5a87f8475f06fc1222e72769b4ca76979
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Returning cached proof for compliance
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x5a65714a468a15fc12f940dad04a8cd9c15a09ff60f7a5c568d5d8d736625f7b
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0xa2d222174a7baffe8c53ab90cbeacc813a6618e4b4a2c2be4356f86cfe2332b4
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x2f18f21b6f92cac6d70f88952bf046e4dbcb92e7f7b6ebc41faf25bced3ab53c
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780394322 (2026-06-02 09:58:42 UTC)
+Certificate Hash: 0xa5a43d96903d779abe0d9e343bd49c381badff6352e6c980b378849b1886a478
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x563ca4eb4383d0d9ea9367a7254da398c0c892b8b93ee5de329fff89341690ff
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780394589 (2026-06-02 10:03:09 UTC)
+Certificate Hash: 0x8392b346057c6144a1f165e8c97e03d7dc8586412c343c73a9e874e2e2263373
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x1887da2f0852daaf37213ff4c9021a8aec80f3478ce43f42f32d4760c29c054a
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780394651 (2026-06-02 10:04:11 UTC)
+Certificate Hash: 0x0645c6f0719e861e02a7259b59d97d4d37a1b65be123b09cf1dcdafdc9937631
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x1887da2f0852daaf37213ff4c9021a8aec80f3478ce43f42f32d4760c29c054a
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x50d0d793db355ea09b12518d0f9c6dc5a359d867037ea3c44a1d30a73b662ace
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Returning cached proof for balance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x3b2452465747d3914a72333b7fcbb4932c9fd7c8b2b95a49c048cad15cdce0a1
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780394778 (2026-06-02 10:06:18 UTC)
+Certificate Hash: 0x7449680092cef9334362284ce8d226d1b371a838a1b56cfe4bf1f2b19089e729
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x3b2452465747d3914a72333b7fcbb4932c9fd7c8b2b95a49c048cad15cdce0a1
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x2a4f8cf979576147f668c2ee5d1b2ee61846be6a7cab15ad07876cb54db4e000
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xe1956e0e04724becc3a6a2ace02e540cd6dbe15f4e8620575eb1c23300c23669
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780395636 (2026-06-02 10:20:36 UTC)
+Certificate Hash: 0x78da21eafaa0c8286789e17a1a7e545d418626522c6a14cb566b4fbc9fe5adc8
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0xe1956e0e04724becc3a6a2ace02e540cd6dbe15f4e8620575eb1c23300c23669
+Asset ID: 150
+Actual Balance: 10100000
+Min Balance: 100000
+Merkle Root: 0x646bef5359fa3c2aa64e12d3ed9a344f881c2be06d5102d676e566865eeafb23
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0xe1956e0e04724becc3a6a2ace02e540cd6dbe15f4e8620575eb1c23300c23669
+Asset ID: 0
+Actual Balance: 20000000
+Min Balance: 10000000
+Merkle Root: 0xdc0693ebbaf5b9818d699de740faad23d5fdb7390bb2ed49435ac8f689975c4e
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0xe6e613232aec277736dc49529651d3e87c0ae8ce007af8f4a7268a315eeb921d
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780398825 (2026-06-02 11:13:45 UTC)
+Certificate Hash: 0xe0f30ad9bed4c66bd803368f61ccd83498b93f584b9ee71b7f0cc23e12480a2a
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0xe6e613232aec277736dc49529651d3e87c0ae8ce007af8f4a7268a315eeb921d
+Asset ID: 0
+Actual Balance: 600000000
+Min Balance: 300000000
+Merkle Root: 0x0b4610fd67e087543e22273829e9c36f0b53dc8c2c7358070f172a15fb9e7541
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x6e681eff395576e0d2a9bcb8d365b1f8b312d90d70a362148e87b92e210c7e9d
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780399002 (2026-06-02 11:16:42 UTC)
+Certificate Hash: 0xd4b2e876c1dd7e7e973a5eb458e24a1524b8b241432336aade25be3b8dcad31f
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x6e681eff395576e0d2a9bcb8d365b1f8b312d90d70a362148e87b92e210c7e9d
+Asset ID: 0
+Actual Balance: 36000000
+Min Balance: 18000000
+Merkle Root: 0x5097eda2ae83c10820f88704220bf74ddb8d47d3c7f274158f875933e5ec2f08
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x6e681eff395576e0d2a9bcb8d365b1f8b312d90d70a362148e87b92e210c7e9d
+Asset ID: 0
+Actual Balance: 200000000000000000
+Min Balance: 100000000000000000
+Merkle Root: 0xca9dd042e016a3fc2e64c616594ee7d391c934d1d85e56d013c308c02ed1cbac
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json
+Returning cached proof for balance
+Returning cached proof for balance
+Returning cached proof for balance
+Generating compliance proof...
+=== Compliance Proof Generation ===
+Commitment: 0x4f80f40fac131f25c0be2aa80aaf06865887693290c8e4b1331e2bd4b0fcb1aa
+Authority: 0x5bd2f329c50860366c0e6d3b4227a422b66ad203
+Valid Until: 1780399709 (2026-06-02 11:28:29 UTC)
+Certificate Hash: 0x24c8b09d9b8cf4dc59f2af3db4b40de2bd9bf82b11403074f13b75d2b13b0609
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: compliance_proof.json
+Generating balance proof...
+=== Balance Proof Generation ===
+Commitment: 0x4f80f40fac131f25c0be2aa80aaf06865887693290c8e4b1331e2bd4b0fcb1aa
+Asset ID: 0
+Actual Balance: 200000000000000000
+Min Balance: 100000000000000000
+Merkle Root: 0x926322be99a60b85be0966dac4de5312d4eaaecdd50c660131624e461b834277
+
+Setting up proving keys...
+Generating proof...
+✓ Successfully generated proof!
+✓ Successfully verified proof!
+✓ Proof saved to: balance_proof.json

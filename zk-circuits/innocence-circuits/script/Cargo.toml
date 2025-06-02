@@ -20,6 +20,10 @@ path = "src/bin/compliance_proof.rs"
 name = "trade-proof"
 path = "src/bin/trade_proof.rs"
 
+[[bin]]
+name = "generate-vkeys"
+path = "src/bin/generate_vkeys.rs"
+
 [dependencies]
 sp1-sdk = "4.2.0"
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }

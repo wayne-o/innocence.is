@@ -1,0 +1,233 @@
+.private-withdraw {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.private-withdraw h2 {
+  margin: 0 0 24px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.withdraw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.deposits-list {
+  margin-top: 12px;
+}
+
+.deposits-list h4 {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.deposit-item {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.deposit-item:hover {
+  border-color: #4CAF50;
+  background: #f8fffe;
+}
+
+.deposit-item.selected {
+  border-color: #4CAF50;
+  background: #e8f5e9;
+}
+
+.deposit-item div {
+  margin: 4px 0;
+}
+
+.file-upload {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.file-upload label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.file-upload input[type="file"] {
+  padding: 8px;
+  border: 1px dashed #4CAF50;
+  border-radius: 8px;
+  width: 100%;
+  background: #f8fffe;
+}
+
+.uploaded-info {
+  margin-top: 8px;
+  padding: 8px;
+  background: #e8f5e9;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #2e7d32;
+}
+
+.withdraw-btn {
+  padding: 14px 24px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 12px;
+}
+
+.withdraw-btn:hover:not(:disabled) {
+  background: #f57c00;
+}
+
+.withdraw-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Reuse styles from PrivateDeposit.css */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #ff9800;
+}
+
+.form-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.selected-asset {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.selected-asset:hover {
+  border-color: #ff9800;
+}
+
+.change-link {
+  color: #ff9800;
+  font-size: 14px;
+}
+
+.select-asset-btn {
+  padding: 12px 16px;
+  border: 1px dashed #ff9800;
+  background: #fff8f0;
+  border-radius: 8px;
+  color: #ff9800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.select-asset-btn:hover {
+  background: #ff9800;
+  color: white;
+  border-style: solid;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #999;
+}
+
+.error-message {
+  padding: 12px;
+  background: #fee;
+  color: #c33;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.success-message {
+  padding: 12px;
+  background: #efe;
+  color: #3c3;
+  border-radius: 8px;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.info-box {
+  background-color: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.info-box p {
+  margin: 8px 0;
+  color: #e65100;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+}
