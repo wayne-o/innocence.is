@@ -9,7 +9,7 @@ interface PrivateDepositEVMProps {
   userAddress: string;
 }
 
-type DepositStep = 'amount' | 'deposit' | 'complete' | 'done';
+type DepositStep = 'amount' | 'deposit' | 'completing' | 'complete' | 'done';
 
 export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDepositEVMProps) {
   const [amount, setAmount] = useState('');
@@ -53,7 +53,8 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
         userAddress
       });
 
-      // Step 1: Prepare deposit on contract
+      // Call prepareDeposit for pure EVM - this one doesn't check spot balances
+      console.log('Calling pure EVM prepareDeposit...');
       const prepareTx = await privacySystem.prepareDeposit(tokenId, amountWei.toString());
       console.log('Prepare deposit tx:', prepareTx.hash);
       await prepareTx.wait();
@@ -74,7 +75,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       });
 
       setCurrentStep('deposit');
-      setSuccess('Deposit prepared! Now send the native currency to complete the deposit.');
+      setSuccess('Deposit prepared! Now send ETH to the contract.');
       
     } catch (err: any) {
       setError(err.message || 'Failed to prepare deposit');
@@ -109,10 +110,10 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       });
 
       console.log('Send tokens tx:', tx.hash);
-      setSuccess('ETH sent! Hash: ' + tx.hash + ' - Proceeding to completion...');
+      setSuccess('ETH sent! Hash: ' + tx.hash + ' - Waiting for completion readiness...');
       
-      // IMMEDIATELY proceed to completion - don't wait for RPC confirmation
-      setCurrentStep('complete');
+      // Change to completing step to show we're working on completion
+      setCurrentStep('completing');
       
       // Start polling for completion readiness in background
       setTimeout(() => {
@@ -147,7 +148,10 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
         const canComplete = await privacySystem.canCompleteDeposit(userAddress);
         if (canComplete) {
           console.log('✅ Deposit ready for completion after', attempts, 'attempts');
-          setSuccess('Deposit ready! You can now complete it.');
+          setSuccess('Deposit ready! Advancing to completion step...');
+          
+          // Automatically advance to complete step when ready
+          setCurrentStep('complete');
           return true;
         }
         return false;
@@ -197,28 +201,11 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
         try {
           console.log(`Completion attempt ${attempt}/${maxRetries}...`);
           
-          // Build transaction with FIXED parameters - no gas estimation
-          const signer = await privacySystem.getSigner();
-          const contractAddress = await privacySystem.getContractAddress();
-          
-          // Encode the function call manually
-          const iface = new ethers.Interface([
-            "function completeDeposit(bytes32 commitment, bytes calldata complianceProof, bytes calldata publicValues) external"
-          ]);
-          
-          const data = iface.encodeFunctionData('completeDeposit', [
+          // Use EVM completeDeposit function (ETH should already be sent)
+          const tx = await privacySystem.completeDeposit({
             commitment,
-            proofBytes,
+            complianceProof: proofBytes,
             publicValues
-          ]);
-          
-          // Send with FIXED gas parameters
-          const tx = await signer.sendTransaction({
-            to: contractAddress,
-            data: data,
-            gasLimit: 500000, // Fixed gas limit - generous but safe
-            gasPrice: 2000000000, // 2 gwei - higher priority
-            value: 0
           });
 
           console.log('Complete deposit tx submitted:', tx.hash);
@@ -291,6 +278,11 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
   };
 
   const handleSuccessfulCompletion = async (commitment: string, txHash: string) => {
+    console.log('🎉 Pure EVM deposit completed successfully!');
+    
+    // Change to done step since deposit is complete
+    setCurrentStep('done');
+    
     // Store commitment data securely
     proofService.storeCommitmentData(commitment, pendingDepositData!.secret, pendingDepositData!.nullifier);
 
@@ -378,12 +370,13 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
 
       {currentStep === 'deposit' && (
         <div className="deposit-form">
-          <h3>Step 2: Send Native Currency</h3>
-          <p>Send {amount} ETH to the privacy contract to fund your deposit.</p>
+          <h3>Step 2: Send ETH to Contract</h3>
+          <p>Send {amount} ETH to the contract address to fund your private deposit.</p>
           
           <div className="info-box">
             <p>💰 Amount: {amount} ETH</p>
-            <p>🏠 Pure EVM approach - no L1 integration</p>
+            <p>🏠 Pure EVM approach - two steps</p>
+            <p>📤 First send ETH, then complete with proof</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -394,7 +387,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
             onClick={handleSendTokens}
             disabled={loading}
           >
-            {loading ? 'Sending...' : 'Send Native Currency'}
+            {loading ? 'Sending ETH...' : 'Send ETH to Contract'}
           </button>
           
           <button
@@ -403,6 +396,35 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
             style={{ marginTop: '10px', backgroundColor: '#666' }}
           >
             Skip to Complete (if ETH already sent)
+          </button>
+        </div>
+      )}
+
+      {currentStep === 'completing' && (
+        <div className="deposit-form">
+          <h3>Step 3: Completing Deposit</h3>
+          <p>ETH has been sent. Waiting for deposit to be ready for completion...</p>
+          
+          <div className="info-box">
+            <p>⏳ Waiting for blockchain confirmation</p>
+            <p>🔍 Checking if deposit can be completed</p>
+            <p>📊 This may take a few moments</p>
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
+          
+          <div className="loading-indicator">
+            <div className="spinner"></div>
+            <p>Monitoring deposit status...</p>
+          </div>
+          
+          <button
+            className="deposit-btn"
+            onClick={() => setCurrentStep('complete')}
+            style={{ marginTop: '20px', backgroundColor: '#666' }}
+          >
+            Force Complete (if ready)
           </button>
         </div>
       )}
@@ -455,6 +477,29 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
             <p>📄 Keep your downloaded commitment file safe</p>
             <p>🔒 Use it to withdraw privately later</p>
           </div>
+
+          <button
+            className="deposit-btn"
+            onClick={resetDeposit}
+          >
+            Make Another Deposit
+          </button>
+        </div>
+      )}
+
+      {currentStep === 'done' && (
+        <div className="deposit-form">
+          <h3>✅ Pure EVM Deposit Complete!</h3>
+          <p>Your deposit has been successfully completed on-chain with zero-knowledge proof.</p>
+          
+          <div className="info-box">
+            <p>🎉 Deposit completed successfully!</p>
+            <p>🔐 Commitment stored securely</p>
+            <p>📥 Secret file downloaded</p>
+            <p>💰 Funds are now privately held in the contract</p>
+          </div>
+
+          {success && <div className="success-message">{success}</div>}
 
           <button
             className="deposit-btn"

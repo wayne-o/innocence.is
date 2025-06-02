@@ -5,11 +5,11 @@ import { HyperliquidAPI } from './hyperliquidApi';
 // Contract ABI for V5 with two-step deposit
 const PRIVACY_SYSTEM_V5_ABI = [
   // Two-step deposit functions
-  "function prepareDeposit(uint64 token, uint64 amount) external",
+  "function prepareDeposit(uint64 token, uint256 amount) external",
   "function completeDeposit(bytes32 commitment, bytes calldata complianceProof, bytes calldata publicValues) external",
   "function transferToContract(uint64 token, uint64 amount) external",
   "function canCompleteDeposit(address user) external view returns (bool)",
-  "function pendingDeposits(address) external view returns (uint64 token, uint64 amount, uint64 contractBalanceBefore, uint256 timestamp, bool completed)",
+  "function pendingDeposits(address) external view returns (uint64 token, uint256 amount, uint256 contractBalanceBefore, uint256 timestamp, bool completed)",
   // Legacy deposit (will fail on Hyperliquid)
   "function deposit(bytes32 commitment, uint64 token, uint64 amount, bytes calldata complianceProof, bytes calldata publicValues) external",
   // Other functions
