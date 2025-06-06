@@ -322,7 +322,7 @@ The combination of familiar Rust development, flexible proving options, and prod
 ## Next Steps
 
 - Explore SP1's advanced features like recursive proofs
-- Join the Succinct community on Discord
+- Join the Succinct community on [Discord](https://discord.gg/succinctlabs)
 - Apply for testnet access to use the prover network
 - Check out more examples in the [SP1 repository](https://github.com/succinctlabs/sp1)
 
