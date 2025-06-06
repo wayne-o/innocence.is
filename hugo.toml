@@ -2,6 +2,7 @@ baseURL = 'https://innocence.is/'
 languageCode = 'en-us'
 title = 'Innocence Protocol'
 theme = 'innocence-theme'
+summaryLength = 20
 
 [params]
   description = "Private trading on Hyperliquid. Zero-knowledge proof powered privacy for DeFi."

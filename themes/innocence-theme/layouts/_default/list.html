@@ -115,7 +115,7 @@
           {{ .Date.Format "January 2, 2006" }}
         </div>
         <div class="summary">
-          {{ .Summary }}
+          {{ .Summary | truncate 150 "..." }}
         </div>
         <a href="{{ .Permalink }}" class="read-more">Read more →</a>
       </article>
