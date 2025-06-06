@@ -1,0 +1,135 @@
+{{ define "styles" }}
+<style>
+  body {
+    animation: mymove 60s infinite;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main_content {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    font-size: 4em;
+    margin-bottom: 0.2em;
+  }
+
+  h2 {
+    font-size: 0.8em;
+    font-weight: 400;
+    opacity: 0.8;
+    letter-spacing: 0.02em;
+    display: inline-block;
+    position: relative;
+  }
+
+  h2::after {
+    content: '';
+    position: absolute;
+    right: -0.15em;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: white;
+    animation: blink-caret .75s step-end infinite;
+  }
+
+  .typewriter {
+    overflow: hidden;
+    animation: typing 3.5s steps(40, end);
+    white-space: nowrap;
+    max-width: fit-content;
+    margin: 0 auto;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink-caret {
+    from, to { opacity: 0 }
+    50% { opacity: 1; }
+  }
+
+  @keyframes mymove {
+    0% { background-color: #13313d; }
+    20% { background-color: #f42c6a; }
+    40% { background-color: #f4b740; }
+    60% { background-color: #6e1eed; }
+    80% { background-color: #1ded9d; }
+    100% { background-color: #13313d; }
+  }
+
+  .h-100 {
+    height: 100% !important;
+  }
+
+  /* Extra large screens */
+  @media (min-width: 1400px) {
+    h1 {
+      font-size: 3.5em;
+    }
+  }
+  
+  /* Large screens */
+  @media (max-width: 1400px) and (min-width: 1200px) {
+    h1 {
+      font-size: 3.2em;
+    }
+  }
+  
+  /* Medium screens */
+  @media (max-width: 1200px) and (min-width: 768px) {
+    body {
+      font-size: 1.5em;
+    }
+    h1 {
+      font-size: 3em;
+    }
+  }
+  
+  /* Small screens */
+  @media (max-width: 768px) {
+    body {
+      font-size: 0.8em;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+  }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<div class="main_content">
+  <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+    <div class="d-flex justify-content-center">
+      <div class="text-center">
+        <h1 class="mx-auto my-0 text-lowrecase">
+          innocence.is
+        </h1>
+        <div class="typewriter">
+          <h2>
+            The privacy infrastructure for all of DeFi
+          </h2>
+        </div>
+        <div style="margin-top: 3em;">
+          <a href="/blog/" style="color: white; opacity: 0.8; text-decoration: none; font-size: 0.6em;">
+            Read our blog →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}
