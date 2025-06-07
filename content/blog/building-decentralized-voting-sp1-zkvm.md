@@ -321,6 +321,7 @@ The combination of familiar Rust development, flexible proving options, and prod
 
 ## Next Steps
 
+- **Build the UI**: Check out our [follow-up tutorial](/blog/building-react-ui-sp1-voting/) on creating a React frontend
 - Explore SP1's advanced features like recursive proofs
 - Join the Succinct community on [Discord](https://discord.gg/succinctlabs)
 - Apply for testnet access to use the prover network
