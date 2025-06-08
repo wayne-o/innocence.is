@@ -6,7 +6,8 @@ use alloy_sol_types::SolType;
 use clap::Parser;
 use hex;
 use innocence_circuits_lib::{TradeProofPublicValues, compute_commitment};
-use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
+use sp1_sdk::{include_elf, ProverClient, SP1Stdin, HashableKey};
+use serde_json;
 
 /// The ELF file for the trade proof circuit
 pub const TRADE_PROOF_ELF: &[u8] = include_elf!("innocence-trade-proof");
@@ -90,6 +91,7 @@ fn main() {
     let commitment = compute_commitment(&secret, &nullifier);
 
     // Setup the prover client
+    // Use local proving (no network access needed)
     let client = ProverClient::from_env();
 
     // Setup the inputs
@@ -132,21 +134,50 @@ fn main() {
         let (pk, vk) = client.setup(TRADE_PROOF_ELF);
 
         // Generate the proof
-        println!("Generating proof...");
-        let proof = client
-            .prove(&pk, &stdin)
-            .run()
-            .expect("failed to generate proof");
+        let use_groth16 = std::env::var("USE_GROTH16").unwrap_or_else(|_| "false".to_string()) == "true";
+        
+        let proof = if use_groth16 {
+            println!("Generating Groth16 proof...");
+            client
+                .prove(&pk, &stdin)
+                .groth16()
+                .run()
+                .expect("failed to generate proof")
+        } else {
+            println!("Generating Core proof...");
+            client
+                .prove(&pk, &stdin)
+                .run()
+                .expect("failed to generate proof")
+        };
 
-        println!("✓ Successfully generated proof!");
+        println!("✓ Successfully generated {} proof!", if use_groth16 { "Groth16" } else { "Core" });
 
         // Verify the proof
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("✓ Successfully verified proof!");
 
+        // Get the raw proof bytes for the verifier (if supported)
+        let proof_bytes = if use_groth16 {
+            proof.bytes()
+        } else {
+            // For Core proofs, we'll use a placeholder
+            // In production, you must use Groth16 or PLONK for on-chain verification
+            vec![0u8; 32]
+        };
+        println!("Proof bytes (for verifier): 0x{}", hex::encode(&proof_bytes));
+
+        // Create proof JSON with both SP1 proof format and raw bytes
+        let proof_json = serde_json::json!({
+            "proof": proof,
+            "rawBytes": format!("0x{}", hex::encode(&proof_bytes)),
+            "publicValues": format!("0x{}", hex::encode(&proof.public_values.as_slice())),
+            "vkey": format!("0x{}", hex::encode(&vk.bytes32()))
+        });
+
         // Save the proof to a file
         let proof_path = "trade_proof.json";
-        std::fs::write(proof_path, serde_json::to_string_pretty(&proof).unwrap())
+        std::fs::write(proof_path, serde_json::to_string_pretty(&proof_json).unwrap())
             .expect("Failed to write proof");
         println!("✓ Proof saved to: {}", proof_path);
     }

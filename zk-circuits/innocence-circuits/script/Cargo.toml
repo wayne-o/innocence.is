@@ -24,8 +24,12 @@ path = "src/bin/trade_proof.rs"
 name = "generate-vkeys"
 path = "src/bin/generate_vkeys.rs"
 
+[[bin]]
+name = "innocence-proof"
+path = "src/bin/innocence_proof.rs"
+
 [dependencies]
-sp1-sdk = "4.2.0"
+sp1-sdk = { version = "4.2.0", features = ["native-gnark"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 serde = { version = "1.0.200", default-features = false, features = ["derive"] }
 clap = { version = "4.0", features = ["derive", "env"] }

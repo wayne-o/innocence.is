@@ -38,9 +38,12 @@ export class PrivacySystemService {
   private contract?: Contract;
   private listeners: Array<() => void> = [];
 
-  constructor(contractAddress: string) {
-    this.contractAddress = contractAddress.trim();
-    console.log('Privacy System V5 address:', this.contractAddress);
+  constructor(contractAddress?: string) {
+    // Use environment variable if no address provided
+    this.contractAddress = (contractAddress || 
+      process.env.REACT_APP_PRIVACY_SYSTEM_ADDRESS || 
+      '0xdDe7C2a318ce8FadcD42ef56B0ef7bb4e0c897aB').trim();
+    console.log('Privacy System address:', this.contractAddress);
   }
 
   public getProvider(): Provider {

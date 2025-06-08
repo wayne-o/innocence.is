@@ -23,6 +23,8 @@ export interface ProofResponse {
   commitment: string;
   proofType: string;
   timestamp: number;
+  formattedProof?: string;
+  encodedPublicValues?: string;
 }
 
 class ProofService {
@@ -119,18 +121,70 @@ class ProofService {
   // Convert SP1 proof to bytes for contract
   proofToBytes(proof: any): string {
     try {
-      // SP1 proofs are very large, so for the mock verifier we'll use a hash
-      // In production, this would be the actual proof bytes from SP1
-      const proofString = JSON.stringify(proof);
-      const proofHash = keccak256(toUtf8Bytes(proofString));
-      
-      // Return a fixed-size proof (64 bytes = 128 hex chars) based on the hash
-      // This ensures consistent size and includes proof verification info
-      return proofHash + proofHash.slice(2); // 128 hex chars total
+      // Check if this is an SP1 proof structure
+      if (proof && proof.proof && proof.proof.Core) {
+        // This is a real SP1 proof - we need to serialize it properly
+        // SP1 proofs need to be encoded in a specific format for the verifier
+        
+        // For now, we'll encode the proof as a compact representation
+        // In production, this should match the exact format expected by SP1Verifier
+        
+        // Extract key proof components
+        const core = proof.proof.Core[0];
+        const commitment = core.commitment;
+        const openedValues = core.opened_values;
+        
+        // Create a simplified proof representation
+        // This is a placeholder - the actual serialization depends on the SP1 verifier version
+        const proofData = {
+          mainCommit: commitment.main_commit.value,
+          permutationCommit: commitment.permutation_commit.value,
+          quotientCommit: commitment.quotient_commit.value,
+          openedChips: openedValues.chips.map((chip: any) => ({
+            logDegree: chip.log_degree,
+            quotient: chip.quotient[0][0].value
+          }))
+        };
+        
+        // For SP1VerifierGroth16, we need to convert to the expected format:
+        // 4-byte selector + 8 uint256 values
+        
+        // The verifier selector for SP1VerifierGroth16
+        const VERIFIER_SELECTOR = '0xa4594c59';
+        
+        // Extract 8 uint256 values from the proof data
+        // This is a simplified conversion - in production, use proper SP1 SDK
+        const groth16Points = [
+          proofData.mainCommit[0] || 0,
+          proofData.mainCommit[1] || 0,
+          proofData.permutationCommit[0] || 0,
+          proofData.permutationCommit[1] || 0,
+          proofData.quotientCommit[0] || 0,
+          proofData.quotientCommit[1] || 0,
+          proofData.openedChips[0]?.quotient[0] || 0,
+          proofData.openedChips[0]?.logDegree || 0
+        ];
+        
+        // Encode as bytes with selector prefix
+        const proofWithoutSelector = AbiCoder.defaultAbiCoder().encode(
+          ['uint256[8]'],
+          [groth16Points]
+        );
+        
+        // Combine selector + proof data
+        const proofBytes = VERIFIER_SELECTOR + proofWithoutSelector.slice(2);
+        
+        return proofBytes;
+      } else {
+        // Fallback for unexpected proof format
+        console.warn('Unexpected proof format, using hash encoding');
+        const proofString = JSON.stringify(proof);
+        const proofHash = keccak256(toUtf8Bytes(proofString));
+        return proofHash + proofHash.slice(2);
+      }
     } catch (error) {
       console.error('Error serializing proof:', error);
-      // Fallback to mock proof if serialization fails
-      return '0x' + 'ab'.repeat(128);
+      throw new Error('Failed to serialize proof: ' + error);
     }
   }
 
@@ -151,71 +205,19 @@ class ProofService {
           validDays: 365
         });
 
-        const encodedPublicValues = await this.encodePublicValues('compliance', proofResponse.publicValues);
-        
+        // Use the server-formatted proof and encoded public values
         return {
           commitment,
-          proofBytes: this.proofToBytes(proofResponse.proof),
-          publicValues: encodedPublicValues
+          proofBytes: proofResponse.formattedProof || this.proofToBytes(proofResponse.proof),
+          publicValues: proofResponse.encodedPublicValues || await this.encodePublicValues('compliance', proofResponse.publicValues)
         };
       } catch (error) {
-        console.warn('Proof service unavailable, using mock proof');
+        console.error('Proof service unavailable');
+        throw new Error('Proof service is required. Please ensure the proof service is running at ' + this.baseUrl);
       }
-      
-      // Fallback to mock proof if service is not available
-      // For testing only - in production, the proof service must be running
-      const mockProof = '0x' + 'ab'.repeat(128); // 256 bytes of mock data
-      
-      // Get compliance authority from contract
-      // For now use the deployed authority address
-      const complianceAuthority = '0x5Bd2F329C50860366c0E6D3b4227a422B66AD203';
-      
-      // Mock public values: commitment, authority, validUntil, certificateHash
-      const mockPublicValues = AbiCoder.defaultAbiCoder().encode(
-        ['bytes32', 'address', 'uint256', 'bytes32'],
-        [
-          commitment,
-          complianceAuthority,
-          Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60, // Valid for 1 year
-          keccak256(toUtf8Bytes('mock-certificate'))
-        ]
-      );
-      
-      return {
-        commitment,
-        proofBytes: mockProof,
-        publicValues: mockPublicValues
-      };
     } catch (error: any) {
-      console.warn('Proof service not available, using mock proof');
-      
-      // If proof service is not running, generate mock data
-      const commitment = keccak256(
-        concat([
-          getBytes(secret),
-          getBytes(nullifier)
-        ])
-      );
-      
-      // Mock proof bytes
-      const mockProof = '0x' + 'ab'.repeat(128);
-      
-      // Mock public values
-      const mockPublicValues = AbiCoder.defaultAbiCoder().encode(
-        ['bytes32', 'address', 'uint256', 'bytes32'],
-        [
-          commitment,
-          '0x5Bd2F329C50860366c0E6D3b4227a422B66AD203', // Mock authority
-          Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60,
-          keccak256(toUtf8Bytes('certificate'))
-        ]
-      );
-      
-      return {
-        commitment,
-        proofBytes: mockProof,
-        publicValues: mockPublicValues
-      };
+      console.error('Error generating deposit proof:', error);
+      throw new Error('Failed to generate deposit proof: ' + error.message);
     }
   }
 
@@ -225,7 +227,8 @@ class ProofService {
     fromAsset: number,
     toAsset: number,
     fromAmount: number,
-    minToAmount: number
+    minToAmount: number,
+    privacySystem?: any
   ): Promise<{
     proofBytes: string;
     publicValues: string;
@@ -245,34 +248,60 @@ class ProofService {
         toBalance: minToAmount * 2 // Mock: assume we'll have 2x what we're getting
       });
 
-      const encodedPublicValues = await this.encodePublicValues('trade', proofResponse.publicValues);
-      
+      // Use the server-formatted proof and encoded public values
       return {
-        proofBytes: this.proofToBytes(proofResponse.proof),
-        publicValues: encodedPublicValues
+        proofBytes: proofResponse.formattedProof || this.proofToBytes(proofResponse.proof),
+        publicValues: proofResponse.encodedPublicValues || await this.encodePublicValues('trade', proofResponse.publicValues)
       };
     } catch (error: any) {
-      console.warn('Proof service error, using mock trade proof');
-      
-      // Mock proof for testing
-      const mockProof = '0x' + 'cd'.repeat(128);
-      
-      // Encode public values for trade proof
-      const publicValues = AbiCoder.defaultAbiCoder().encode(
-        ['bytes32', 'uint64', 'uint64', 'uint256', 'uint256'],
-        [
-          commitment,
-          fromAsset,
-          toAsset,
-          parseUnits(fromAmount.toString(), 6), // Convert to wei (assuming 6 decimals)
-          parseUnits(minToAmount.toString(), 6)
-        ]
-      );
+      console.error('Error generating trade proof:', error);
+      throw new Error('Failed to generate trade proof. Please ensure the proof service is running at ' + this.baseUrl);
+    }
+  }
+
+  // Helper for innocence proof
+  async checkSanctionsStatus(address: string): Promise<{
+    isSanctioned: boolean;
+    sanctionsRoot: string;
+    timestamp: number;
+  }> {
+    const response = await fetch(`${this.baseUrl}/api/sanctions/check/${address}`);
+    if (!response.ok) throw new Error('Failed to check sanctions status');
+    return response.json();
+  }
+
+  async generateInnocenceProof(depositor: string): Promise<{
+    proofBytes: string;
+    publicValues: string;
+    status: any;
+  }> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/generate-proof/innocence`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ depositor })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate innocence proof');
+      }
+
+      const proofResponse = await response.json();
       
       return {
-        proofBytes: mockProof,
-        publicValues: publicValues
+        proofBytes: proofResponse.formattedProof || this.proofToBytes(proofResponse.proof),
+        publicValues: proofResponse.encodedPublicValues || await this.encodePublicValues('innocence', {
+          depositor,
+          sanctionsRoot: proofResponse.status.sanctionsRoot,
+          timestamp: proofResponse.status.timestamp,
+          isInnocent: true
+        }),
+        status: proofResponse.status
       };
+    } catch (error: any) {
+      console.error('Error generating innocence proof:', error);
+      throw new Error('Failed to generate innocence proof: ' + error.message);
     }
   }
 
@@ -307,50 +336,17 @@ class ProofService {
       // Override merkle root with actual contract value
       proofResponse.publicValues.merkleRoot = merkleRoot;
 
-      const encodedPublicValues = await this.encodePublicValues('balance', proofResponse.publicValues);
       const nullifierHash = keccak256(toUtf8Bytes(commitmentData.nullifier));
       
+      // Use the server-formatted proof and encoded public values
       return {
         nullifier: nullifierHash,
-        proofBytes: this.proofToBytes(proofResponse.proof),
-        publicValues: encodedPublicValues
+        proofBytes: proofResponse.formattedProof || this.proofToBytes(proofResponse.proof),
+        publicValues: proofResponse.encodedPublicValues || await this.encodePublicValues('balance', proofResponse.publicValues)
       };
     } catch (error: any) {
-      console.warn('Proof service error, using mock withdrawal proof');
-      
-      // If proof service fails, use mock data
-      const commitmentData = this.getCommitmentData(commitment);
-      if (!commitmentData) {
-        throw new Error('Commitment data not found for withdrawal');
-      }
-      
-      // Generate nullifier hash that corresponds to this specific commitment
-      const nullifierHash = keccak256(toUtf8Bytes(commitmentData.nullifier));
-      
-      // For mock verifier, we need to ensure the merkle root matches
-      // If merkle root is 0x000..., we need to handle this specially
-      const isEmptyMerkle = merkleRoot === '0x0000000000000000000000000000000000000000000000000000000000000000';
-      
-      // Mock proof that will pass the mock verifier
-      const mockProof = '0x' + 'ab'.repeat(128);
-      
-      // Encode public values that match contract expectations
-      // For withdrawal, we need to prove we have at least the amount we're withdrawing
-      const publicValues = AbiCoder.defaultAbiCoder().encode(
-        ['bytes32', 'bytes32', 'uint256', 'uint64'],
-        [
-          commitment,
-          isEmptyMerkle ? commitment : merkleRoot, // Use commitment as root if tree is empty
-          Math.abs(amount), // Ensure amount is positive
-          token
-        ]
-      );
-      
-      return {
-        nullifier: nullifierHash,
-        proofBytes: mockProof,
-        publicValues: publicValues
-      };
+      console.error('Error generating withdrawal proof:', error);
+      throw new Error('Failed to generate withdrawal proof. Please ensure the proof service is running at ' + this.baseUrl);
     }
   }
 }

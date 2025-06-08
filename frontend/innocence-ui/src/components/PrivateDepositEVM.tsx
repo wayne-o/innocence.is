@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { parseEther, formatEther, ethers } from 'ethers';
+import React, { useState, useEffect } from 'react';
+import { parseEther, formatEther, parseUnits, formatUnits, ethers } from 'ethers';
 import { PrivacySystemService } from '../services/blockchain-v4';
 import proofService from '../services/proofService';
+import { getNativeCurrencyName, formatCurrencyAmount, getMinimumDepositAmount, getNetworkConfig } from '../utils/network';
+import InnocenceProof from './InnocenceProof';
 import './PrivateDeposit.css';
 
 interface PrivateDepositEVMProps {
@@ -13,6 +15,12 @@ type DepositStep = 'amount' | 'deposit' | 'completing' | 'complete' | 'done';
 
 export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDepositEVMProps) {
   const [amount, setAmount] = useState('');
+  const [selectedToken, setSelectedToken] = useState<{symbol: string, decimals: number, tokenId: number, isNative: boolean, address?: string}>({
+    symbol: 'HYPE',
+    decimals: 18,
+    tokenId: 0,
+    isNative: true
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -20,6 +28,51 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
   const [currentStep, setCurrentStep] = useState<DepositStep>('amount');
   const [depositCommitment, setDepositCommitment] = useState<string | null>(null);
   const [pendingDepositData, setPendingDepositData] = useState<any>(null);
+  const [isInnocent, setIsInnocent] = useState(false);
+  const [checkingInnocence, setCheckingInnocence] = useState(true);
+
+  // Check innocence status on mount
+  useEffect(() => {
+    checkInnocenceStatus();
+  }, [userAddress]);
+
+  const checkInnocenceStatus = async () => {
+    try {
+      setCheckingInnocence(true);
+      // In the real system, this would check the smart contract
+      // For now, we'll check via the proof service
+      const status = await proofService.checkSanctionsStatus(userAddress);
+      setIsInnocent(!status.isSanctioned);
+    } catch (error) {
+      console.error('Error checking innocence:', error);
+      setIsInnocent(false);
+    } finally {
+      setCheckingInnocence(false);
+    }
+  };
+
+  const handleInnocenceProven = () => {
+    setIsInnocent(true);
+  };
+
+  // Available tokens based on network
+  const availableTokens = React.useMemo(() => {
+    const { isTestnet } = getNetworkConfig();
+    const tokens: Array<{symbol: string, decimals: number, tokenId: number, isNative: boolean, name: string, address?: string}> = [
+      { symbol: 'HYPE', decimals: 18, tokenId: 0, isNative: true, name: 'Native HYPE' }
+    ];
+    
+    if (isTestnet) {
+      // Note: These still use your custom token contracts for deposits
+      // but the UI shows real asset names for consistency
+      tokens.push(
+        { symbol: 'ETH', decimals: 18, tokenId: 1, isNative: false, name: 'Ethereum (Test)', address: process.env.REACT_APP_TEST_HYPE_ADDRESS },
+        { symbol: 'USDC', decimals: 6, tokenId: 2, isNative: false, name: 'USD Coin (Test)', address: process.env.REACT_APP_TEST_USDC_ADDRESS }
+      );
+    }
+    
+    return tokens;
+  }, []);
 
   const handlePrepareDeposit = async () => {
     if (!amount) {
@@ -35,7 +88,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
 
     // Minimum amount for testing
     if (depositAmount < 0.001) {
-      setError('Minimum deposit amount is 0.001 ETH');
+      setError(`Minimum deposit amount is 0.001 ${selectedToken.symbol}`);
       return;
     }
 
@@ -43,9 +96,8 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       setLoading(true);
       setError(null);
 
-      // For pure EVM, we'll use native currency (token ID 0)
-      const tokenId = 0; // Native ETH-like currency
-      const amountWei = parseEther(amount);
+      const tokenId = selectedToken.tokenId;
+      const amountWei = parseUnits(amount, selectedToken.decimals);
       
       console.log('Preparing EVM deposit:', {
         token: tokenId,
@@ -75,7 +127,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       });
 
       setCurrentStep('deposit');
-      setSuccess('Deposit prepared! Now send ETH to the contract.');
+      setSuccess(`Deposit prepared! Now send ${selectedToken.symbol} to the contract.`);
       
     } catch (err: any) {
       setError(err.message || 'Failed to prepare deposit');
@@ -92,25 +144,48 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       setLoading(true);
       setError(null);
 
-      // For pure EVM, send native currency directly to the contract
-      const amountWei = parseEther(amount);
-      
-      console.log('Sending native currency to contract:', {
-        to: await privacySystem.getContractAddress(),
-        value: amountWei.toString()
-      });
-
-      // Send native currency to the contract with FIXED gas limit
+      const amountWei = parseUnits(amount, selectedToken.decimals);
+      const contractAddress = await privacySystem.getContractAddress();
       const signer = await privacySystem.getSigner();
-      const tx = await signer.sendTransaction({
-        to: await privacySystem.getContractAddress(),
-        value: amountWei,
-        gasLimit: 100000, // Fixed gas - no estimation needed
-        gasPrice: 1000000000 // 1 gwei - fixed price
-      });
+      
+      let tx;
+      
+      if (selectedToken.isNative) {
+        // Send native currency directly to the contract
+        console.log('Sending native currency to contract:', {
+          to: contractAddress,
+          value: amountWei.toString()
+        });
+        
+        tx = await signer.sendTransaction({
+          to: contractAddress,
+          value: amountWei,
+          gasLimit: 100000, // Fixed gas - no estimation needed
+          gasPrice: 1000000000 // 1 gwei - fixed price
+        });
+      } else {
+        // Transfer ERC20 token to the contract
+        if (!selectedToken.address) {
+          throw new Error('Token address not found');
+        }
+        
+        console.log('Sending ERC20 token to contract:', {
+          token: selectedToken.address,
+          to: contractAddress,
+          amount: amountWei.toString()
+        });
+        
+        const tokenContract = new ethers.Contract(
+          selectedToken.address,
+          ['function transfer(address to, uint256 amount) external returns (bool)'],
+          signer
+        );
+        
+        tx = await tokenContract.transfer(contractAddress, amountWei);
+      }
 
       console.log('Send tokens tx:', tx.hash);
-      setSuccess('ETH sent! Hash: ' + tx.hash + ' - Waiting for completion readiness...');
+      setSuccess(`${selectedToken.symbol} sent! Hash: ${tx.hash} - Waiting for completion readiness...`);
       
       // Change to completing step to show we're working on completion
       setCurrentStep('completing');
@@ -302,7 +377,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       commitment,
       secret: pendingDepositData!.secret,
       nullifier: pendingDepositData!.nullifier,
-      asset: 'ETH',
+      asset: selectedToken.symbol,
       amount: pendingDepositData!.amount,
       timestamp: new Date().toISOString()
     };
@@ -327,6 +402,27 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
     setSuccess(null);
   };
 
+  // Show innocence proof component if not proven
+  if (checkingInnocence) {
+    return (
+      <div className="private-deposit">
+        <h2>Checking Innocence Status...</h2>
+        <div className="loading">Please wait...</div>
+      </div>
+    );
+  }
+
+  if (!isInnocent) {
+    return (
+      <div className="private-deposit">
+        <InnocenceProof 
+          userAddress={userAddress} 
+          onInnocenceProven={handleInnocenceProven}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="private-deposit">
       <h2>Pure EVM Private Deposit</h2>
@@ -334,12 +430,32 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       {currentStep === 'amount' && (
         <>
           <p className="deposit-explanation">
-            Deposit native currency into the private vault using pure EVM transfers.
+            Deposit tokens into the private vault using pure EVM transfers.
           </p>
           
           <div className="deposit-form">
+            {availableTokens.length > 1 && (
+              <div className="form-group">
+                <label>Token</label>
+                <select 
+                  value={selectedToken.symbol} 
+                  onChange={(e) => {
+                    const token = availableTokens.find(t => t.symbol === e.target.value);
+                    if (token) setSelectedToken(token);
+                  }}
+                  className="token-selector"
+                >
+                  {availableTokens.map(token => (
+                    <option key={token.symbol} value={token.symbol}>
+                      {token.name} ({token.symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            
             <div className="form-group">
-              <label>Amount (ETH)</label>
+              <label>Amount ({selectedToken.symbol})</label>
               <input
                 type="number"
                 placeholder="0.001"
@@ -349,8 +465,8 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
                 min="0.001"
               />
               <div className="input-hint">
-                <div>Minimum: 0.001 ETH</div>
-                <div>Using native currency for pure EVM privacy</div>
+                <div>Minimum: 0.001 {selectedToken.symbol}</div>
+                <div>Using {selectedToken.isNative ? 'native currency' : 'ERC20 token'} for pure EVM privacy</div>
               </div>
             </div>
 
@@ -370,13 +486,13 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
 
       {currentStep === 'deposit' && (
         <div className="deposit-form">
-          <h3>Step 2: Send ETH to Contract</h3>
-          <p>Send {amount} ETH to the contract address to fund your private deposit.</p>
+          <h3>Step 2: Send {selectedToken.symbol} to Contract</h3>
+          <p>Send {amount} {selectedToken.symbol} to the contract address to fund your private deposit.</p>
           
           <div className="info-box">
-            <p>💰 Amount: {amount} ETH</p>
+            <p>💰 Amount: {amount} {selectedToken.symbol}</p>
             <p>🏠 Pure EVM approach - two steps</p>
-            <p>📤 First send ETH, then complete with proof</p>
+            <p>📤 First send {selectedToken.symbol}, then complete with proof</p>
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -387,7 +503,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
             onClick={handleSendTokens}
             disabled={loading}
           >
-            {loading ? 'Sending ETH...' : 'Send ETH to Contract'}
+            {loading ? `Sending ${selectedToken.symbol}...` : `Send ${selectedToken.symbol} to Contract`}
           </button>
           
           <button
@@ -395,7 +511,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
             onClick={() => setCurrentStep('complete')}
             style={{ marginTop: '10px', backgroundColor: '#666' }}
           >
-            Skip to Complete (if ETH already sent)
+            Skip to Complete (if {selectedToken.symbol} already sent)
           </button>
         </div>
       )}
@@ -487,28 +603,6 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
         </div>
       )}
 
-      {currentStep === 'done' && (
-        <div className="deposit-form">
-          <h3>✅ Pure EVM Deposit Complete!</h3>
-          <p>Your deposit has been successfully completed on-chain with zero-knowledge proof.</p>
-          
-          <div className="info-box">
-            <p>🎉 Deposit completed successfully!</p>
-            <p>🔐 Commitment stored securely</p>
-            <p>📥 Secret file downloaded</p>
-            <p>💰 Funds are now privately held in the contract</p>
-          </div>
-
-          {success && <div className="success-message">{success}</div>}
-
-          <button
-            className="deposit-btn"
-            onClick={resetDeposit}
-          >
-            Make Another Deposit
-          </button>
-        </div>
-      )}
     </div>
   );
 }

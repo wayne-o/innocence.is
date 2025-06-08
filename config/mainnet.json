@@ -14,7 +14,9 @@
     "sp1Verifier": "0xC55664b68E495Cd32BFFdAf53b881a60A5baCfd5",
     "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
     "privacySystem": "0xcbc0a4A93a5FFe0C070Ab02b0Eb4bAB155E7669d",
-    "transferHelper": "0xA413BeA7cd05608eB65542240Ce4930Efb3FCA5A"
+    "bridgeTrading": "0x0000000000000000000000000000000000000000",
+    "verifierType": "MockSP1Verifier",
+    "contractType": "HyperliquidPrivacySystemEVM"
   },
   "api": {
     "hyperliquidEndpoint": "https://api.hyperliquid.xyz",

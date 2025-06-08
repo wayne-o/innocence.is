@@ -1,8 +1,0 @@
-{
-  "network": "hyperevm_testnet",
-  "contract": "HyperliquidTransferHelper",
-  "address": "0x486f0f9Be46b76b70699b6C9596e5BFF8C2A5A58",
-  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
-  "timestamp": "2025-05-30T12:52:25.344Z",
-  "description": "Helper contract for user-initiated token transfers on Hyperliquid"
-}

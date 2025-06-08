@@ -33,13 +33,23 @@ sol! {
     }
 }
 
-// Compliance proof public values
+// Compliance proof public values (DEPRECATED - use InnocenceProof instead)
 sol! {
     struct ComplianceProofPublicValues {
         bytes32 commitment;
         address complianceAuthority;
         uint256 validUntil;
         bytes32 certificateHash;
+    }
+}
+
+// Innocence proof public values - proves address is not sanctioned
+sol! {
+    struct InnocenceProofPublicValues {
+        address depositor;
+        bytes32 sanctionsRoot;
+        uint256 timestamp;
+        bool isInnocent;
     }
 }
 

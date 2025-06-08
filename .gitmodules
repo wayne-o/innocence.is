@@ -1,0 +1,6 @@
+[submodule "marketing_site_repo"]
+	path = marketing_site_repo
+	url = git@github.com:wayne-o/innocence.is.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/hxfinance/docs.git

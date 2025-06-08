@@ -1,0 +1,11 @@
+{
+  "network": "hyperevm_testnet",
+  "timestamp": "2025-06-06T08:59:24.354Z",
+  "contracts": {
+    "privacySystem": "0xc943E86231f0562DbBE38193731DC49E55F7fA4c",
+    "sp1Verifier": "0x90067a057D526AE2AcD13DfEc655Aa94aAe72693",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203"
+  },
+  "verifierType": "SP1VerifierGroth16 (Real)",
+  "version": "v5.0.0"
+}

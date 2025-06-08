@@ -1,54 +1,18 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystem.sol": {
-      "lastModificationDate": 1748524799180,
-      "contentHash": "2a52e5a5e2c226231a8f37ec93287c53",
-      "sourceName": "contracts/HyperliquidPrivacySystem.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystem",
-        "IHyperCoreRead",
-        "IHyperCoreWrite"
-      ]
-    },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/MockHyperCore.sol": {
       "lastModificationDate": 1748525659356,
       "contentHash": "6ecb6a0e08a48d72e51b0d86a2cacbdf",
       "sourceName": "contracts/MockHyperCore.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -74,52 +38,18 @@
         "MockHyperCoreWrite"
       ]
     },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemTestnet.sol": {
-      "lastModificationDate": 1748536708991,
-      "contentHash": "d1bf1b472c5690302ab94a8530f8ec78",
-      "sourceName": "contracts/HyperliquidPrivacySystemTestnet.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemTestnet"
-      ]
-    },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/TestPrecompile.sol": {
       "lastModificationDate": 1748536949219,
       "contentHash": "2e7a5e6f00650070c26712a1bbbaf982",
       "sourceName": "contracts/TestPrecompile.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -146,98 +76,18 @@
         "TestPrecompile"
       ]
     },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemV3.sol": {
-      "lastModificationDate": 1748589214252,
-      "contentHash": "0e155972c69fbad433a66cf2b57f7b6a",
-      "sourceName": "contracts/HyperliquidPrivacySystemV3.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemV3",
-        "IHyperCoreWrite",
-        "IOraclePxPrecompile",
-        "IPositionPrecompile",
-        "ISpotBalancePrecompile"
-      ]
-    },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemV4.sol": {
-      "lastModificationDate": 1748595233707,
-      "contentHash": "bbfbf7a527a1abe68dd0599e75dce4d0",
-      "sourceName": "contracts/HyperliquidPrivacySystemV4.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ISP1Verifier.sol",
-        "./InnocenceVerificationKeys.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemV4",
-        "IHyperCoreWrite",
-        "IOraclePxPrecompile",
-        "IPositionPrecompile",
-        "ISpotBalancePrecompile"
-      ]
-    },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/ISP1Verifier.sol": {
       "lastModificationDate": 1748595169359,
       "contentHash": "fddbc007912889aed1524dd5a820490a",
       "sourceName": "contracts/ISP1Verifier.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -263,16 +113,17 @@
       ]
     },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/InnocenceVerificationKeys.sol": {
-      "lastModificationDate": 1748595159064,
-      "contentHash": "11482e7449efad07eab6d187b11f7be1",
+      "lastModificationDate": 1749207661593,
+      "contentHash": "adcbb7f386542ab0e43862ecaf3a9843",
       "sourceName": "contracts/InnocenceVerificationKeys.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -302,12 +153,13 @@
       "contentHash": "e215c751c9e528eee4b4822a08a63305",
       "sourceName": "contracts/MockSP1Verifier.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -334,169 +186,18 @@
         "MockSP1Verifier"
       ]
     },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemV5.sol": {
-      "lastModificationDate": 1748608578483,
-      "contentHash": "29d49a054371adccc6446546d5230911",
-      "sourceName": "contracts/HyperliquidPrivacySystemV5.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ISP1Verifier.sol",
-        "./InnocenceVerificationKeys.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemV5",
-        "IHyperCoreWrite",
-        "IOraclePxPrecompile",
-        "IPositionPrecompile",
-        "ISpotBalancePrecompile"
-      ]
-    },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidTransferHelper.sol": {
-      "lastModificationDate": 1748609509937,
-      "contentHash": "849368e57f3b31e6b58527ce8202ce3d",
-      "sourceName": "contracts/HyperliquidTransferHelper.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidTransferHelper",
-        "IHyperCoreWrite"
-      ]
-    },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemTest.sol": {
-      "lastModificationDate": 1748851125571,
-      "contentHash": "de245faee5cba4867ff9af66fafddc27",
-      "sourceName": "contracts/HyperliquidPrivacySystemTest.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./HyperliquidPrivacySystemV5.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemTest"
-      ]
-    },
-    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemV5Debug.sol": {
-      "lastModificationDate": 1748852144003,
-      "contentHash": "8e6ee0fab76b9e282559949e791f9504",
-      "sourceName": "contracts/HyperliquidPrivacySystemV5Debug.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./HyperliquidPrivacySystemV5.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "HyperliquidPrivacySystemV5Debug"
-      ]
-    },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemEVM.sol": {
-      "lastModificationDate": 1748852346836,
-      "contentHash": "961001584728b605622606e5b5126fc6",
+      "lastModificationDate": 1748875764636,
+      "contentHash": "7418a0914525ba0f48eb3d1453bbe408",
       "sourceName": "contracts/HyperliquidPrivacySystemEVM.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -521,7 +222,10 @@
         "^0.8.19"
       ],
       "artifacts": [
-        "HyperliquidPrivacySystemEVM"
+        "HyperliquidPrivacySystemEVM",
+        "IHyperCoreWrite",
+        "IOraclePxPrecompile",
+        "ISpotBalancePrecompile"
       ]
     },
     "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemEVMWithRecovery.sol": {
@@ -529,12 +233,13 @@
       "contentHash": "c9e7a02b2be489b34cbb0b548e8d6a95",
       "sourceName": "contracts/HyperliquidPrivacySystemEVMWithRecovery.sol",
       "solcConfig": {
-        "version": "0.8.19",
+        "version": "0.8.20",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -560,6 +265,352 @@
       ],
       "artifacts": [
         "HyperliquidPrivacySystemEVMWithRecovery"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/TestToken.sol": {
+      "lastModificationDate": 1748876062983,
+      "contentHash": "3940126d679413b997650779723b6a54",
+      "sourceName": "contracts/TestToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "TestToken"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1748524893230,
+      "contentHash": "57d79df281f57bbb1b09214c7914f877",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol",
+        "../../interfaces/draft-IERC6093.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1748524893274,
+      "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+      "lastModificationDate": 1748524893216,
+      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1155Errors",
+        "IERC20Errors",
+        "IERC721Errors"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1748524893207,
+      "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1748524893257,
+      "contentHash": "8f19f64d2adadf448840908bbaf431c8",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1748524893257,
+      "contentHash": "794db3115001aa372c79326fcfd44b1f",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidEVMTrading.sol": {
+      "lastModificationDate": 1748879261854,
+      "contentHash": "260e2e3094a57c728a99f28ab12d75f2",
+      "sourceName": "contracts/HyperliquidEVMTrading.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ISP1Verifier.sol",
+        "./InnocenceVerificationKeys.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HyperliquidEVMTrading",
+        "IDepositContract"
+      ]
+    },
+    "/Users/waynedouglas/github/wayne-o/innocence/contracts/contracts/HyperliquidPrivacySystemInnocence.sol": {
+      "lastModificationDate": 1749207634422,
+      "contentHash": "50da217331db2d7668161e6426ef2167",
+      "sourceName": "contracts/HyperliquidPrivacySystemInnocence.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ISP1Verifier.sol",
+        "./InnocenceVerificationKeys.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HyperliquidPrivacySystemInnocence",
+        "IERC20"
       ]
     }
   }

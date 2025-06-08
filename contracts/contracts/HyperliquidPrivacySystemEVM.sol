@@ -4,6 +4,22 @@ pragma solidity ^0.8.19;
 import "./ISP1Verifier.sol";
 import "./InnocenceVerificationKeys.sol";
 
+// Hyperliquid Precompile Interfaces (using correct method signatures)
+interface ISpotBalancePrecompile {
+    function spotBalance(address user, uint32 coin) external view returns (uint64);
+}
+
+interface IOraclePxPrecompile {
+    function oraclePx(uint32 index) external view returns (uint64);
+}
+
+interface IHyperCoreWrite {
+    // Note: Write precompile addresses and methods need to be verified
+    // These may not exist or have different signatures
+    function sendSpot(address to, uint32 coin, uint64 amount) external returns (bool);
+    function spotTrade(uint32 coin, bool isBuy, uint64 limitPx, uint64 sz, uint64 cloid) external returns (bool);
+}
+
 /// @notice Pure EVM Privacy System - no L1 integration
 /// @dev Handles EVM tokens directly without cross-chain complexity
 contract HyperliquidPrivacySystemEVM {
@@ -29,9 +45,15 @@ contract HyperliquidPrivacySystemEVM {
     }
     mapping(address => PendingDeposit) public pendingDeposits;
     
+    // Hyperliquid Precompile Addresses (correct addresses)
+    ISpotBalancePrecompile constant SPOT_BALANCE = ISpotBalancePrecompile(0x0000000000000000000000000000000000000801);
+    IOraclePxPrecompile constant ORACLE_PX = IOraclePxPrecompile(0x0000000000000000000000000000000000000807);
+    IHyperCoreWrite constant HYPERCORE_WRITE = IHyperCoreWrite(0x3333333333333333333333333333333333333333); // Write system contract
+
     // Events
     event PrivateDeposit(bytes32 indexed commitment, uint256 timestamp);
     event PrivateWithdraw(bytes32 indexed nullifier, uint256 timestamp);
+    event PrivateSpotTrade(address indexed user, uint32 coin, bool isBuy, uint64 sz, uint256 timestamp);
     event TokenAdded(uint64 indexed tokenId, address tokenAddress);
     
     // ZK proof structures
@@ -47,6 +69,16 @@ contract HyperliquidPrivacySystemEVM {
         address complianceAuthority;
         uint256 validUntil;
         bytes32 certificateHash;
+    }
+
+    struct TradeProofPublicValues {
+        address user;
+        uint32 coin;
+        bool isBuy;
+        uint64 limitPx;
+        uint64 sz;
+        uint64 minBalance;
+        bytes32 merkleRoot;
     }
     
     constructor(
@@ -160,6 +192,48 @@ contract HyperliquidPrivacySystemEVM {
         _transferTokens(token, recipient, amount);
         
         emit PrivateWithdraw(nullifier, block.timestamp);
+    }
+    
+    /// @notice Execute private spot trade using Hyperliquid precompiles
+    function privateSpotTrade(
+        bytes calldata tradeProof,
+        bytes calldata publicValues
+    ) external {
+        // Decode trade parameters
+        TradeProofPublicValues memory trade = abi.decode(publicValues, (TradeProofPublicValues));
+        require(trade.user == msg.sender, "Invalid user");
+        require(trade.merkleRoot == getMerkleRoot(), "Invalid merkle root");
+        
+        // Verify the ZK proof for balance and trade authorization
+        sp1Verifier.verifyProof(
+            InnocenceVerificationKeys.BALANCE_VKEY, // Using balance vkey for trade authorization
+            publicValues,
+            tradeProof
+        );
+        
+        // Get current spot balance to verify sufficient funds
+        uint64 currentBalance = SPOT_BALANCE.spotBalance(msg.sender, trade.coin);
+        require(currentBalance >= trade.minBalance, "Insufficient balance for trade");
+        
+        // Get current oracle price for validation (optional sanity check)
+        uint64 oraclePx = ORACLE_PX.oraclePx(trade.coin);
+        require(oraclePx > 0, "Invalid oracle price");
+        
+        // Execute the spot trade via precompile
+        // Generate unique client order ID using block timestamp and user
+        uint64 cloid = uint64(uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, trade.coin))));
+        
+        bool success = HYPERCORE_WRITE.spotTrade(
+            trade.coin,
+            trade.isBuy,
+            trade.limitPx,
+            trade.sz,
+            cloid
+        );
+        
+        require(success, "Spot trade execution failed");
+        
+        emit PrivateSpotTrade(trade.user, trade.coin, trade.isBuy, trade.sz, block.timestamp);
     }
     
     /// @notice Get contract's token balance

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HyperCoreAsset } from '../types';
 import { hyperCoreAPI } from '../services/api';
+import { getNetworkConfig } from '../utils/network';
 import './AssetSelector.css';
 
 interface AssetSelectorProps {
@@ -22,18 +23,81 @@ export function AssetSelector({ onAssetSelect, filterPerps = false }: AssetSelec
   const fetchHyperCoreAssets = async () => {
     try {
       setLoading(true);
-      const assetsData = await hyperCoreAPI.getAssets();
+      const { isTestnet } = getNetworkConfig();
+      
+      let assetsData: HyperCoreAsset[];
+      
+      if (isTestnet) {
+        // Use real Hyperliquid testnet assets
+        assetsData = [
+          {
+            symbol: 'USDC',
+            name: 'USD Coin',
+            assetId: '0',
+            decimals: 6,
+            isPerp: false,
+            supportsPrivacy: true,
+            currentPrice: 1.0,
+            minTradeSize: 0.01,
+            address: '0xeF2224b2032c05C6C7b48355957F3C67191ac81e', // tUSDC address on testnet
+            isNative: false,
+            tokenId: 1 // Token ID in privacy contract
+          },
+          {
+            symbol: 'ETH',
+            name: 'Ethereum',
+            assetId: '1',
+            decimals: 18,
+            isPerp: false,
+            supportsPrivacy: true,
+            currentPrice: 3000.0,
+            minTradeSize: 0.001
+          },
+          {
+            symbol: 'BTC',
+            name: 'Bitcoin',
+            assetId: '2',
+            decimals: 8,
+            isPerp: false,
+            supportsPrivacy: true,
+            currentPrice: 65000.0,
+            minTradeSize: 0.0001
+          },
+          {
+            symbol: 'SOL',
+            name: 'Solana',
+            assetId: '3',
+            decimals: 9,
+            isPerp: false,
+            supportsPrivacy: true,
+            currentPrice: 150.0,
+            minTradeSize: 0.01
+          },
+          {
+            symbol: 'HYPE',
+            name: 'Hyperliquid (Native)',
+            assetId: '4',
+            decimals: 18,
+            isPerp: false,
+            supportsPrivacy: true,
+            currentPrice: 25.0,
+            minTradeSize: 0.1,
+            isNative: true,
+            tokenId: 0 // Native token ID
+          }
+        ];
+        setUsingMockData(true);
+      } else {
+        // Use real HyperCore API for mainnet
+        assetsData = await hyperCoreAPI.getAssets();
+        setUsingMockData(assetsData.length > 0 && assetsData[0].name.includes('(Hyperliquid)'));
+      }
+      
       const filteredAssets = assetsData.filter(asset => 
         asset.supportsPrivacy && (filterPerps ? !asset.isPerp : true)
       );
       setAssets(filteredAssets);
       
-      // Check if we're using mock data (hyperCoreAPI handles this internally)
-      if (assetsData.length > 0 && assetsData[0].name.includes('(Hyperliquid)')) {
-        setUsingMockData(true);
-      } else {
-        setUsingMockData(false);
-      }
     } catch (err) {
       console.error('Failed to fetch assets:', err);
       setError('Failed to load assets');

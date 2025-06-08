@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { keccak256, AbiCoder, parseUnits } from 'ethers';
 import { HyperCoreAsset } from '../types';
 import { PrivacySystemService } from '../services/blockchain-v4';
+import { TradingService } from '../services/trading-service';
 import proofService from '../services/proofService';
 import { AssetSelector } from './AssetSelector';
 import './PrivateTrade.css';
@@ -10,6 +11,10 @@ interface PrivateTradeProps {
   privacySystem: PrivacySystemService;
   userAddress: string;
 }
+
+// Initialize trading service with bridge trading contract
+const TRADING_CONTRACT_ADDRESS = '0xc70C375FEb7c9efF3f72AEfBd535C175beDE7d1B';
+const tradingService = new TradingService(TRADING_CONTRACT_ADDRESS);
 
 interface StoredCommitment {
   commitment: string;
@@ -76,7 +81,8 @@ export function PrivateTrade({ privacySystem, userAddress }: PrivateTradeProps) 
         parseInt(fromAsset.assetId),
         parseInt(toAsset.assetId),
         parseFloat(amount),
-        minToAmount
+        minToAmount,
+        privacySystem
       );
       setGeneratingProof(false);
 
@@ -87,7 +93,8 @@ export function PrivateTrade({ privacySystem, userAddress }: PrivateTradeProps) 
         amount
       });
 
-      const tx = await privacySystem.privateSpotTrade({
+      // Use new trading service instead of old privacySystem
+      const tx = await tradingService.privateSpotTrade({
         tradeProof: proofBytes,
         publicValues: publicValues
       });

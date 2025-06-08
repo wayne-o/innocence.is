@@ -8,8 +8,9 @@ import { PrivatePortfolio } from './components/PrivatePortfolio';
 import { switchToHyperliquidTestnet, switchToHyperliquidMainnet } from './utils/metamask-config';
 import './App.css';
 
-// Contract address from environment
-const PRIVACY_SYSTEM_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS || '0x669E4933eE72a35eBC0c00f9C3084ce46e4424c4';
+// Contract addresses from environment
+const PRIVACY_SYSTEM_ADDRESS = process.env.REACT_APP_PRIVACY_SYSTEM_ADDRESS || process.env.REACT_APP_CONTRACT_ADDRESS || '0xdDe7C2a318ce8FadcD42ef56B0ef7bb4e0c897aB';
+const BRIDGE_TRADING_ADDRESS = process.env.REACT_APP_BRIDGE_TRADING_ADDRESS || '0xc70C375FEb7c9efF3f72AEfBd535C175beDE7d1B';
 
 declare global {
   interface Window {

@@ -1,0 +1,16 @@
+{
+  "network": "hyperevm_testnet",
+  "timestamp": "2025-06-02T15:48:23.041Z",
+  "deployer": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+  "contracts": {
+    "evmTradingContract": "0x666ADea75cDe95bb146549e74912742C44D1A978",
+    "depositContract": "0xFB6d3B483676C53C9Bf5A4bE22B175F99c0480ff",
+    "sp1Verifier": "0x3B6041173B80E77f038f3F2C0f9744f04837185e"
+  },
+  "features": {
+    "pureEVMTrading": true,
+    "commitmentBalances": true,
+    "noPrecompileDependency": true,
+    "zkProofVerification": true
+  }
+}

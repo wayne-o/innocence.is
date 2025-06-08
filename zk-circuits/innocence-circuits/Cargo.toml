@@ -4,6 +4,7 @@ members = [
     "program",
     "balance-proof",
     "compliance-proof",
+    "innocence-proof",
     "trade-proof",
     "script",
 ]

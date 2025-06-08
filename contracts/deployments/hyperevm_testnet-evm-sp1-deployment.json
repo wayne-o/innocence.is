@@ -1,0 +1,17 @@
+{
+  "network": "hyperevm_testnet",
+  "timestamp": "2025-06-06T09:18:52.178Z",
+  "contracts": {
+    "privacySystem": "0x89EaEdC49adEAE838B712Fc9385511c6E8a40470",
+    "sp1Verifier": "0x90067a057D526AE2AcD13DfEc655Aa94aAe72693",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203"
+  },
+  "contractType": "HyperliquidPrivacySystemEVM",
+  "verifierType": "SP1VerifierGroth16 (Real)",
+  "version": "v5.0.0",
+  "features": [
+    "Pure EVM",
+    "Real SP1 Verification",
+    "Native + ERC20 Support"
+  ]
+}

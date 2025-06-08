@@ -7,6 +7,9 @@ export interface HyperCoreAsset {
   currentPrice: number;
   supportsPrivacy: boolean;
   minTradeSize: number;
+  address?: string; // ERC20 token address (optional, not needed for native tokens)
+  isNative?: boolean; // Whether this is the native currency (HYPE)
+  tokenId?: number; // Numeric token ID for the privacy contract
 }
 
 export interface ComplianceCheckRequest {

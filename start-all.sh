@@ -8,19 +8,19 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Start proof service
-echo -e "${BLUE}Starting Proof Service...${NC}"
-cd proof-service
-npm start &
-PROOF_PID=$!
-echo -e "${GREEN}✓ Proof Service started (PID: $PROOF_PID)${NC}"
+# # Start proof service
+# echo -e "${BLUE}Starting Proof Service...${NC}"
+# cd proof-service
+# npm start &
+# PROOF_PID=$!
+# echo -e "${GREEN}✓ Proof Service started (PID: $PROOF_PID)${NC}"
 
 # Wait a bit for proof service to start
 sleep 3
 
 # Start frontend
 echo -e "${BLUE}Starting Frontend...${NC}"
-cd ../frontend/innocence-ui
+cd frontend/innocence-ui
 npm start &
 FRONTEND_PID=$!
 echo -e "${GREEN}✓ Frontend started (PID: $FRONTEND_PID)${NC}"

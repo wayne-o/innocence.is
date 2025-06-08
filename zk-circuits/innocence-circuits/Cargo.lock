@@ -2102,6 +2102,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hex-literal"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
+
+[[package]]
 name = "hmac"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2494,6 +2500,16 @@ version = "0.1.0"
 dependencies = [
  "alloy-sol-types",
  "innocence-circuits-lib",
+ "sha2",
+ "sp1-zkvm",
+]
+
+[[package]]
+name = "innocence-proof"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "hex-literal",
  "sha2",
  "sp1-zkvm",
 ]
@@ -4954,6 +4970,8 @@ dependencies = [
  "getrandom 0.2.15",
  "lazy_static",
  "libm",
+ "p3-baby-bear",
+ "p3-field",
  "rand 0.8.5",
  "sha2",
  "sp1-lib",

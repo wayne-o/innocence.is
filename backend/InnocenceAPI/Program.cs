@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InnocenceAPI.Data;
 using InnocenceAPI.Services;
+using InnocenceAPI.Models;
 
 namespace InnocenceAPI;
 
@@ -32,9 +33,16 @@ public class Program
         // Add HttpClient for external API calls
         builder.Services.AddHttpClient<IHyperCoreIntegrationService, HyperCoreIntegrationService>();
 
+        // Configure options
+        builder.Services.Configure<TokenConfiguration>(
+            builder.Configuration.GetSection("Tokens"));
+        builder.Services.Configure<NetworkConfiguration>(
+            builder.Configuration.GetSection("Network"));
+
         // Add application services
         builder.Services.AddScoped<IComplianceService, ComplianceService>();
         builder.Services.AddScoped<IHyperCoreIntegrationService, HyperCoreIntegrationService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Add CORS for frontend
         builder.Services.AddCors(options =>

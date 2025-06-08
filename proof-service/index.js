@@ -34,10 +34,10 @@ function getCacheKey(proofType, params) {
 // Helper to compute commitment
 function computeCommitment(secret, nullifier) {
   return ethers.keccak256(
-    ethers.concat([
-      ethers.getBytes(secret),
-      ethers.getBytes(nullifier)
-    ])
+    ethers.AbiCoder.defaultAbiCoder().encode(
+      ['bytes32', 'bytes32'],
+      [secret, nullifier]
+    )
   );
 }
 
