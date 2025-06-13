@@ -37,9 +37,9 @@ export function PrivateDepositV2({ privacySystem, userAddress }: PrivateDepositP
         try {
           let balanceFormatted: string;
           
-          // Check if this is HYPe (native currency) vs HYPe spot token
-          if (selectedAsset.symbol === 'HYPE' && selectedAsset.assetId === 'native') {
-            // Get native HYPe balance
+          // Check if this is TestWHYPE (native currency) vs TestWHYPE spot token
+          if (selectedAsset.symbol === 'TestWHYPE' && selectedAsset.assetId === 'native') {
+            // Get native TestWHYPE balance
             balanceFormatted = await privacySystem.getNativeHypeBalanceFormatted(userAddress);
           } else {
             // Get spot token balance
@@ -154,9 +154,9 @@ export function PrivateDepositV2({ privacySystem, userAddress }: PrivateDepositP
       return;
     }
     
-    // Validate minimum amount for HYPE (due to szDecimals=2)
-    if (selectedAsset.symbol === 'HYPE' && requestedAmount < 0.01) {
-      setError('Minimum deposit amount for HYPE is 0.01');
+    // Validate minimum amount for TestWHYPE (due to szDecimals=2)
+    if (selectedAsset.symbol === 'TestWHYPE' && requestedAmount < 0.01) {
+      setError('Minimum deposit amount for TestWHYPE is 0.01');
       return;
     }
 
@@ -169,7 +169,7 @@ export function PrivateDepositV2({ privacySystem, userAddress }: PrivateDepositP
       const tokenMetadata = await HyperliquidAPI.getTokenMetadata(parseInt(selectedAsset.assetId));
       
       // Convert amount to weiDecimals for the contract
-      // For HYPE: 0.2 * 10^8 = 20000000
+      // For TestWHYPE: 0.2 * 10^8 = 20000000
       const amountInWeiDecimals = parseUnits(amount, tokenMetadata.weiDecimals);
       
       console.log('Amount conversion:', {
@@ -312,7 +312,25 @@ export function PrivateDepositV2({ privacySystem, userAddress }: PrivateDepositP
       // Store commitment data securely
       proofService.storeCommitmentData(commitment, pendingDepositData.secret, pendingDepositData.nullifier);
 
-      // Save deposit info
+      // Update the stored commitment data to include balance information
+      const storedData = proofService.getCommitmentData(commitment);
+      if (storedData) {
+        const positionData = {
+          commitment,
+          secret: storedData.secret,
+          nullifier: storedData.nullifier,
+          timestamp: Date.now(),
+          balances: {
+            [pendingDepositData.asset.symbol]: pendingDepositData.amount // Store the display amount
+          },
+          lastUpdated: Date.now()
+        };
+        
+        // Store the updated position with balance
+        localStorage.setItem(`innocence_${commitment}`, JSON.stringify(positionData));
+      }
+
+      // Save deposit info (for record keeping)
       const depositInfo = {
         commitment,
         asset: pendingDepositData.asset.assetId,

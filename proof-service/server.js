@@ -199,7 +199,10 @@ app.post('/api/generate-proof/:proofType', async (req, res) => {
 
       case 'trade':
         // Generate real trade proof using SP1
-        command = `cargo run --bin trade-proof --release -- --prove --secret ${params.secret} --nullifier ${params.nullifier} --from-asset ${params.fromAsset} --to-asset ${params.toAsset} --from-amount ${params.fromAmount} --min-to-amount ${params.minToAmount}`;
+        // Include balance parameters for the circuit
+        const fromBalance = params.fromBalance || params.depositedAmount || params.fromAmount * 2;
+        const toBalance = params.toBalance || 0;
+        command = `cargo run --bin trade-proof --release -- --prove --secret ${params.secret} --nullifier ${params.nullifier} --from-asset ${params.fromAsset} --to-asset ${params.toAsset} --from-amount ${params.fromAmount} --min-to-amount ${params.minToAmount} --from-balance ${fromBalance} --to-balance ${toBalance}`;
 
         const tradeOutput = await executeProofBinary(command);
         console.log('Trade proof generated:', tradeOutput);
@@ -223,17 +226,23 @@ app.post('/api/generate-proof/:proofType', async (req, res) => {
           )
         );
 
+        const nullifierHashTrade = ethers.keccak256(params.nullifier);
+        
         publicValues = {
           commitment: commitmentTrade,
+          nullifierHash: nullifierHashTrade,
           fromAsset: params.fromAsset,
           toAsset: params.toAsset,
           fromAmount: params.fromAmount,
-          minToAmount: params.minToAmount
+          minToAmount: params.minToAmount,
+          depositedAmount: params.depositedAmount || params.fromAmount * 2,
+          merkleRoot: params.merkleRoot || ethers.ZeroHash
         };
-
-        // Add user address for trade proofs
-        publicValues.user = params.userAddress || '0x0000000000000000000000000000000000000000';
-        publicValues.merkleRoot = params.merkleRoot || ethers.ZeroHash;
+        
+        // Override the merkle root if provided in params
+        if (params.merkleRoot) {
+          publicValues.merkleRoot = params.merkleRoot;
+        }
         
         // Format the proof for SP1VerifierGroth16
         const formattedTradeProof = formatSP1ProofForVerifier(tradeProofData);
@@ -266,41 +275,8 @@ app.post('/api/encode-public-values/:proofType', (req, res) => {
   const values = req.body;
 
   try {
-    let encoded;
-
-    switch (proofType) {
-      case 'ownership':
-        encoded = ethers.AbiCoder.defaultAbiCoder().encode(
-          ['bytes32', 'bytes32'],
-          [values.commitment, values.nullifierHash]
-        );
-        break;
-
-      case 'balance':
-        encoded = ethers.AbiCoder.defaultAbiCoder().encode(
-          ['bytes32', 'bytes32', 'uint256', 'uint64'],
-          [values.commitment, values.merkleRoot, values.minBalance, values.assetId]
-        );
-        break;
-
-      case 'compliance':
-        encoded = ethers.AbiCoder.defaultAbiCoder().encode(
-          ['bytes32', 'address', 'uint256', 'bytes32'],
-          [values.commitment, values.complianceAuthority, values.validUntil, values.certificateHash]
-        );
-        break;
-
-      case 'trade':
-        encoded = ethers.AbiCoder.defaultAbiCoder().encode(
-          ['bytes32', 'uint64', 'uint64', 'uint256', 'uint256'],
-          [values.commitment, values.fromAsset, values.toAsset, values.fromAmount, values.minToAmount]
-        );
-        break;
-
-      default:
-        return res.status(400).json({ error: 'Invalid proof type' });
-    }
-
+    // Use the sp1-formatter for encoding
+    const encoded = encodePublicValues(proofType, values);
     res.json({ encoded });
   } catch (error) {
     console.error('Encoding error:', error);

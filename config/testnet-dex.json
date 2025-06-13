@@ -1,0 +1,63 @@
+{
+  "network": {
+    "name": "hyperevm_testnet",
+    "chainId": 998,
+    "rpcUrl": "https://rpc.hyperliquid-testnet.xyz/evm",
+    "explorerUrl": "https://explorer.hyperliquid-testnet.xyz",
+    "nativeCurrency": {
+      "name": "HYPE",
+      "symbol": "HYPE",
+      "decimals": 18
+    }
+  },
+  "contracts": {
+    "privacySystem": "0xbfbC55261c22778686C2B44f596A6dA232Ae0779",
+    "dexExtension": "0x34CE8187a2903905aE4b0EF6f47F8D70A63C75Af",
+    "sp1Verifier": "0x1B830465Ad994B31457578f86B0927F10BB73Bc6",
+    "complianceAuthority": "0x5Bd2F329C50860366c0E6D3b4227a422B66AD203",
+    "swapRouter": "0xA8FAA918701e15c95A6df24DCA0CFB5Bcb1b44B7",
+    "nftPositionManager": "0x1d3e047D96d33fE74aaa16162750ded6d58EB073",
+    "quoterV2": "0x373d38df18970470f889b2818C4e10d276fd06eA"
+  },
+  "tokens": {
+    "HYPE": {
+      "id": 0,
+      "address": "0x0000000000000000000000000000000000000000",
+      "symbol": "HYPE",
+      "decimals": 18,
+      "isNative": true
+    },
+    "WHYPE": {
+      "id": 0,
+      "address": "0x2ab8A4b3c496d8Ce56Fb6A28fd1Bec5b63fCF4d4",
+      "symbol": "WHYPE",
+      "decimals": 18,
+      "isWrappedNative": true
+    },
+    "WETH": {
+      "id": 2,
+      "address": "0xB68B5A27fe8117837291617979b21ECbfbEAd2e3",
+      "symbol": "WETH",
+      "decimals": 18
+    },
+    "USDC": {
+      "id": 3,
+      "address": "0x53AD7C0aF66E852c181E8Af93086b2c88B30cb74",
+      "symbol": "USDC",
+      "decimals": 6
+    }
+  },
+  "pools": {
+    "WHYPE/USDC": {
+      "address": "0x91774F1872c9aacE02d5678Cf81f375Be676C4C1",
+      "fee": 3000,
+      "token0": "WHYPE",
+      "token1": "USDC"
+    }
+  },
+  "features": {
+    "privateSwaps": true,
+    "maxSwapSlippage": 0.5,
+    "defaultSwapFee": 3000
+  }
+}

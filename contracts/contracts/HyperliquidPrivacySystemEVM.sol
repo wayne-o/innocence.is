@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 import "./ISP1Verifier.sol";
 import "./InnocenceVerificationKeys.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // Hyperliquid Precompile Interfaces (using correct method signatures)
 interface ISpotBalancePrecompile {
@@ -26,6 +27,8 @@ contract HyperliquidPrivacySystemEVM {
     
     ISP1Verifier public sp1Verifier;
     address public complianceAuthority;
+    address public owner;
+    address public dexExtension;
     
     // EVM token mappings (token ID → ERC20 address)
     mapping(uint64 => address) public tokenAddresses;
@@ -87,9 +90,15 @@ contract HyperliquidPrivacySystemEVM {
     ) {
         sp1Verifier = ISP1Verifier(_sp1Verifier);
         complianceAuthority = _complianceAuthority;
+        owner = msg.sender;
         
-        // Initialize with native ETH (token ID 0)
-        tokenAddresses[0] = address(0); // Native ETH
+        // Token addresses will be set after deployment
+        // Token 0 will be TestWHYPE (ERC20), not native ETH
+    }
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner");
+        _;
     }
     
     /// @notice Add ERC20 token support
@@ -135,7 +144,7 @@ contract HyperliquidPrivacySystemEVM {
         bytes32 commitment,
         bytes calldata complianceProof,
         bytes calldata publicValues
-    ) external {
+    ) external virtual {
         require(_canCompleteDeposit(msg.sender), "No valid pending deposit");
         require(!commitments[commitment], "Commitment already used");
         
@@ -238,39 +247,30 @@ contract HyperliquidPrivacySystemEVM {
     
     /// @notice Get contract's token balance
     function _getTokenBalance(uint64 token) internal view returns (uint256) {
-        if (token == 0) {
-            return address(this).balance; // Native ETH
-        } else {
-            address tokenAddress = tokenAddresses[token];
-            if (tokenAddress == address(0)) return 0;
-            
-            // Call ERC20 balanceOf
-            (bool success, bytes memory data) = tokenAddress.staticcall(
-                abi.encodeWithSignature("balanceOf(address)", address(this))
-            );
-            if (success && data.length >= 32) {
-                return abi.decode(data, (uint256));
-            }
-            return 0;
+        // All tokens are ERC20 on testnet, including token 0 (TestWHYPE)
+        address tokenAddress = tokenAddresses[token];
+        if (tokenAddress == address(0)) return 0;
+        
+        // Call ERC20 balanceOf
+        (bool success, bytes memory data) = tokenAddress.staticcall(
+            abi.encodeWithSignature("balanceOf(address)", address(this))
+        );
+        if (success && data.length >= 32) {
+            return abi.decode(data, (uint256));
         }
+        return 0;
     }
     
     /// @notice Transfer tokens to recipient
     function _transferTokens(uint64 token, address recipient, uint256 amount) internal {
-        if (token == 0) {
-            // Native ETH transfer
-            require(address(this).balance >= amount, "Insufficient ETH balance");
-            payable(recipient).transfer(amount);
-        } else {
-            // ERC20 transfer
-            address tokenAddress = tokenAddresses[token];
-            require(tokenAddress != address(0), "Token not supported");
-            
-            (bool success, ) = tokenAddress.call(
-                abi.encodeWithSignature("transfer(address,uint256)", recipient, amount)
-            );
-            require(success, "Token transfer failed");
-        }
+        // All tokens are ERC20 on testnet
+        address tokenAddress = tokenAddresses[token];
+        require(tokenAddress != address(0), "Token not supported");
+        
+        (bool success, ) = tokenAddress.call(
+            abi.encodeWithSignature("transfer(address,uint256)", recipient, amount)
+        );
+        require(success, "Token transfer failed");
     }
     
     /// @notice Get merkle root for proof generation
@@ -295,6 +295,22 @@ contract HyperliquidPrivacySystemEVM {
     /// @notice Get pending deposit
     function getPendingDeposit(address user) external view returns (PendingDeposit memory) {
         return pendingDeposits[user];
+    }
+    
+    /// @notice Set DEX extension address
+    function setDexExtension(address _dexExtension) external onlyOwner {
+        dexExtension = _dexExtension;
+    }
+    
+    /// @notice Approve DEX extension to spend tokens
+    function approveDexForTokens(address[] calldata tokens) external onlyOwner {
+        require(dexExtension != address(0), "DEX extension not set");
+        
+        for (uint256 i = 0; i < tokens.length; i++) {
+            if (tokens[i] != address(0)) { // Skip native ETH
+                IERC20(tokens[i]).approve(dexExtension, type(uint256).max);
+            }
+        }
     }
     
     /// @notice Emergency function to receive ETH

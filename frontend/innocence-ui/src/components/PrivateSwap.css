@@ -1,0 +1,238 @@
+.private-swap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.private-swap h3 {
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+.private-swap.no-position {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.private-swap.no-position p {
+  margin: 10px 0;
+  color: #999;
+}
+
+.error-message {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  color: #51cf66;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.swap-section {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.swap-section label {
+  display: block;
+  margin-bottom: 10px;
+  color: #999;
+  font-size: 14px;
+}
+
+.token-input {
+  display: flex;
+  gap: 10px;
+}
+
+.token-input input {
+  flex: 1;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 18px;
+}
+
+.token-input input:focus {
+  outline: none;
+  border-color: #00d4ff;
+}
+
+.token-input select {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.balance {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #999;
+}
+
+.swap-direction {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.switch-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.switch-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: rotate(180deg);
+}
+
+.switch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.advanced-settings {
+  margin: 20px 0;
+}
+
+.toggle-advanced {
+  width: 100%;
+  padding: 10px;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #999;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.toggle-advanced:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.settings-content {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.setting {
+  margin-bottom: 15px;
+}
+
+.setting:last-child {
+  margin-bottom: 0;
+}
+
+.setting label {
+  display: block;
+  margin-bottom: 8px;
+  color: #999;
+  font-size: 13px;
+}
+
+.slippage-options {
+  display: flex;
+  gap: 10px;
+}
+
+.slippage-options button {
+  flex: 1;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slippage-options button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.slippage-options button.active {
+  background-color: #00d4ff;
+  border-color: #00d4ff;
+  color: #000;
+}
+
+.slippage-options button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.setting select {
+  width: 100%;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #e0e0e0;
+  cursor: pointer;
+}
+
+.swap-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: #00d4ff;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 20px;
+}
+
+.swap-btn:hover {
+  background-color: #00a8cc;
+  transform: translateY(-1px);
+}
+
+.swap-btn:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.swap-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 8px;
+}
+
+.swap-info p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #999;
+}

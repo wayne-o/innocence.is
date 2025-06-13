@@ -101,7 +101,25 @@ export function PrivateDeposit({ privacySystem, userAddress }: PrivateDepositPro
         const receipt = await tx.wait();
         console.log('Transaction confirmed:', receipt);
         
-        // Save deposit info locally
+        // Update the stored commitment data to include balance information
+        const storedData = proofService.getCommitmentData(commitment);
+        if (storedData) {
+          const positionData = {
+            commitment,
+            secret: storedData.secret,
+            nullifier: storedData.nullifier,
+            timestamp: Date.now(),
+            balances: {
+              [selectedAsset.symbol]: amount // Store the display amount
+            },
+            lastUpdated: Date.now()
+          };
+          
+          // Store the updated position with balance
+          localStorage.setItem(`innocence_${commitment}`, JSON.stringify(positionData));
+        }
+        
+        // Save deposit info locally (for record keeping)
         const depositInfo = {
           commitment,
           asset: selectedAsset.assetId,

@@ -5,16 +5,18 @@ const PROOF_SERVICE_URL = process.env.REACT_APP_PROOF_SERVICE_URL || 'http://loc
 export interface ProofGenerationParams {
   secret?: string;
   nullifier?: string;
-  balance?: number;
-  minBalance?: number;
+  balance?: number | string;
+  minBalance?: number | string;
   assetId?: number;
   validDays?: number;
-  fromBalance?: number;
-  toBalance?: number;
+  fromBalance?: number | string;
+  toBalance?: number | string;
   fromAsset?: number;
   toAsset?: number;
-  fromAmount?: number;
-  minToAmount?: number;
+  fromAmount?: number | string;
+  minToAmount?: number | string;
+  depositedAmount?: number | string;
+  merkleRoot?: string;
 }
 
 export interface ProofResponse {
@@ -265,7 +267,8 @@ class ProofService {
     sanctionsRoot: string;
     timestamp: number;
   }> {
-    const response = await fetch(`${this.baseUrl}/api/sanctions/check/${address}`);
+    const BACKEND_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5169';
+    const response = await fetch(`${BACKEND_API_URL}/api/compliance/sanctions/check/${address}`);
     if (!response.ok) throw new Error('Failed to check sanctions status');
     return response.json();
   }
@@ -330,11 +333,9 @@ class ProofService {
         nullifier: commitmentData.nullifier,
         balance: actualBalance, // Reasonable balance that covers withdrawal
         minBalance: amount, // Minimum required is the withdrawal amount
-        assetId: token
+        assetId: token,
+        merkleRoot: merkleRoot // Pass the correct merkle root
       });
-
-      // Override merkle root with actual contract value
-      proofResponse.publicValues.merkleRoot = merkleRoot;
 
       const nullifierHash = keccak256(toUtf8Bytes(commitmentData.nullifier));
       

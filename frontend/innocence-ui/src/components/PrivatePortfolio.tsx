@@ -65,7 +65,7 @@ export function PrivatePortfolio({ privacySystem, userAddress }: PrivatePortfoli
 
   // Mock prices (in production, fetch from oracle)
   const mockPrices: { [key: string]: { price: number; change24h: number } } = {
-    '0': { price: 1, change24h: 0 }, // HYPE
+    '0': { price: 1, change24h: 0 }, // TestWHYPE
     '1': { price: 97000, change24h: 2.5 }, // BTC
     '2': { price: 3800, change24h: 1.8 }, // ETH
     '3': { price: 1.2, change24h: -0.5 }, // ARB
@@ -90,7 +90,7 @@ export function PrivatePortfolio({ privacySystem, userAddress }: PrivatePortfoli
     '7': 'OP',
     '8': 'SOL',
     '9': 'SUI',
-    '10': 'HYPE',
+    '10': 'TestWHYPE',
     '11': 'USDT'
   };
 
@@ -106,7 +106,7 @@ export function PrivatePortfolio({ privacySystem, userAddress }: PrivatePortfoli
     '7': 18,  // OP
     '8': 9,   // SOL
     '9': 9,   // SUI
-    '10': 18, // HYPE
+    '10': 18, // TestWHYPE
     '11': 6   // USDT
   };
 

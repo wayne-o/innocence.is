@@ -565,7 +565,7 @@ export class PrivacySystemService {
       });
 
       // Return the total balance (first value)
-      // Note: Hyperliquid returns balances in weiDecimals (8 for HYPE), not full EVM decimals
+      // Note: Hyperliquid returns balances in weiDecimals (8 for TestWHYPE), not full EVM decimals
       return BigInt(decoded[0]);
     } catch (error) {
       console.error('Error fetching spot balance from precompile:', error);

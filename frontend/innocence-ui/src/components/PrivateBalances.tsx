@@ -44,7 +44,7 @@ export function PrivateBalances({ privacySystem, userAddress }: PrivateBalancesP
     '7': 'OP',
     '8': 'SOL',
     '9': 'SUI',
-    '10': 'HYPE',
+    '10': 'TestWHYPE',
     '11': 'USDT'
   };
 
@@ -60,7 +60,7 @@ export function PrivateBalances({ privacySystem, userAddress }: PrivateBalancesP
     '7': 18,  // OP
     '8': 9,   // SOL
     '9': 9,   // SUI
-    '10': 18, // HYPE
+    '10': 18, // TestWHYPE
     '11': 6   // USDT
   };
 
@@ -167,7 +167,7 @@ export function PrivateBalances({ privacySystem, userAddress }: PrivateBalancesP
     return balances.reduce((total, balance) => {
       // Mock calculation
       const mockPrices: { [key: string]: number } = {
-        '0': 1, // HYPE
+        '0': 1, // TestWHYPE
         '1': 97000, // BTC
         '2': 3800, // ETH
         '10': 1, // USDC

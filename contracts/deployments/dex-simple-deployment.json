@@ -1,0 +1,15 @@
+{
+  "network": "hyperliquid-testnet",
+  "timestamp": "2025-06-13T12:06:29.507Z",
+  "contracts": {
+    "PrivateDEXExtensionSimple": "0xa9B4361F87d661f2025DD121423727Df08fef883",
+    "PrivacySystem": "0xbfbC55261c22778686C2B44f596A6dA232Ae0779",
+    "SwapRouter": "0xA8FAA918701e15c95A6df24DCA0CFB5Bcb1b44B7"
+  },
+  "tokens": {
+    "WHYPE": "0x2ab8A4b3c496d8Ce56Fb6A28fd1Bec5b63fCF4d4",
+    "UBTC": "0x0000000000000000000000000000000000000000",
+    "WETH": "0xB68B5A27fe8117837291617979b21ECbfbEAd2e3",
+    "USDC": "0x53AD7C0aF66E852c181E8Af93086b2c88B30cb74"
+  }
+}

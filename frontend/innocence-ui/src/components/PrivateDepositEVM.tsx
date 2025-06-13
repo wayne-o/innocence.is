@@ -16,10 +16,11 @@ type DepositStep = 'amount' | 'deposit' | 'completing' | 'complete' | 'done';
 export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDepositEVMProps) {
   const [amount, setAmount] = useState('');
   const [selectedToken, setSelectedToken] = useState<{symbol: string, decimals: number, tokenId: number, isNative: boolean, address?: string}>({
-    symbol: 'HYPE',
+    symbol: 'TestWHYPE',
     decimals: 18,
     tokenId: 0,
-    isNative: true
+    isNative: false,
+    address: process.env.REACT_APP_WHYPE_ADDRESS || '0x1eBF615D720041AB0E64112d6dbc2ea9A71abEEa'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
   const availableTokens = React.useMemo(() => {
     const { isTestnet } = getNetworkConfig();
     const tokens: Array<{symbol: string, decimals: number, tokenId: number, isNative: boolean, name: string, address?: string}> = [
-      { symbol: 'HYPE', decimals: 18, tokenId: 0, isNative: true, name: 'Native HYPE' }
+      { symbol: 'TestWHYPE', decimals: 18, tokenId: 0, isNative: false, name: 'TestWHYPE Token', address: process.env.REACT_APP_WHYPE_ADDRESS || '0x1eBF615D720041AB0E64112d6dbc2ea9A71abEEa' }
     ];
     
     if (isTestnet) {
@@ -150,6 +151,9 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
       
       let tx;
       
+      console.log('Selected token:', selectedToken);
+      console.log('Is native?', selectedToken.isNative);
+      
       if (selectedToken.isNative) {
         // Send native currency directly to the contract
         console.log('Sending native currency to contract:', {
@@ -177,9 +181,22 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
         
         const tokenContract = new ethers.Contract(
           selectedToken.address,
-          ['function transfer(address to, uint256 amount) external returns (bool)'],
+          [
+            'function transfer(address to, uint256 amount) external returns (bool)',
+            'function approve(address spender, uint256 amount) external returns (bool)',
+            'function allowance(address owner, address spender) external view returns (uint256)'
+          ],
           signer
         );
+        
+        // Check allowance first
+        const currentAllowance = await tokenContract.allowance(await signer.getAddress(), contractAddress);
+        if (currentAllowance < amountWei) {
+          console.log('Approving token spend...');
+          const approveTx = await tokenContract.approve(contractAddress, amountWei);
+          await approveTx.wait();
+          console.log('Token approved');
+        }
         
         tx = await tokenContract.transfer(contractAddress, amountWei);
       }
@@ -361,7 +378,28 @@ export function PrivateDepositEVM({ privacySystem, userAddress }: PrivateDeposit
     // Store commitment data securely
     proofService.storeCommitmentData(commitment, pendingDepositData!.secret, pendingDepositData!.nullifier);
 
-    // Save deposit info to localStorage
+    // Get the stored commitment data and add balance information
+    const storedData = proofService.getCommitmentData(commitment);
+    if (storedData) {
+      // Update the stored data to include balance information
+      const positionData = {
+        commitment,
+        secret: storedData.secret,
+        nullifier: storedData.nullifier,
+        timestamp: Date.now(),
+        balances: {
+          [selectedToken.symbol]: pendingDepositData!.amount // Store the display amount, not wei
+        },
+        depositAmount: pendingDepositData!.amountWei, // Store the wei amount for DEX initialization
+        assetId: 0, // TestWHYPE/native currency is asset 0
+        lastUpdated: Date.now()
+      };
+      
+      // Store the updated position with balance
+      localStorage.setItem(`innocence_${commitment}`, JSON.stringify(positionData));
+    }
+
+    // Save deposit info to localStorage (for record keeping)
     const depositInfo = {
       commitment,
       asset: '0', // Native currency

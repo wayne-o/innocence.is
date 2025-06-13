@@ -116,14 +116,15 @@ function encodePublicValues(proofType, publicValues) {
       
     case 'trade':
       return abiCoder.encode(
-        ['bytes32', 'address', 'uint32', 'uint32', 'uint256', 'uint256', 'bytes32'],
+        ['bytes32', 'bytes32', 'uint64', 'uint64', 'uint256', 'uint256', 'uint256', 'bytes32'],
         [
           publicValues.commitment,
-          publicValues.user,
+          publicValues.nullifierHash,
           publicValues.fromAsset,
           publicValues.toAsset,
           publicValues.fromAmount,
           publicValues.minToAmount,
+          publicValues.depositedAmount,
           publicValues.merkleRoot
         ]
       );

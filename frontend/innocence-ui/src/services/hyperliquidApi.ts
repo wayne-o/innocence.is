@@ -111,9 +111,9 @@ export class HyperliquidAPI {
         const minAmount = Math.pow(10, -tokenMetadata.szDecimals);
         console.warn(`Amount ${decimalAmount} rounds to 0 with ${tokenMetadata.szDecimals} decimals. Minimum is ${minAmount}`);
         
-        // For HYPE with szDecimals=2, minimum is 0.01
-        if (tokenMetadata.name === 'HYPE' && decimalAmount < 0.01) {
-          throw new Error(`Minimum transfer amount for HYPE is 0.01 (you tried ${decimalAmount})`);
+        // For TestWHYPE with szDecimals=2, minimum is 0.01
+        if (tokenMetadata.name === 'TestWHYPE' && decimalAmount < 0.01) {
+          throw new Error(`Minimum transfer amount for TestWHYPE is 0.01 (you tried ${decimalAmount})`);
         }
         
         formattedAmount = minAmount.toFixed(tokenMetadata.szDecimals);

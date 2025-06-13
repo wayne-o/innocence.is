@@ -3,8 +3,8 @@ export const HYPERLIQUID_TESTNET_CONFIG = {
   chainName: 'Hyperliquid Testnet',
   rpcUrls: ['https://rpc.hyperliquid-testnet.xyz/evm'],
   nativeCurrency: {
-    name: 'HYPE',
-    symbol: 'HYPE',
+    name: 'TestWHYPE',
+    symbol: 'TestWHYPE',
     decimals: 18,
   },
   blockExplorerUrls: ['https://explorer.hyperliquid-testnet.xyz'],
@@ -15,8 +15,8 @@ export const HYPERLIQUID_MAINNET_CONFIG = {
   chainName: 'Hyperliquid',
   rpcUrls: ['https://rpc.hyperliquid.xyz/evm'],
   nativeCurrency: {
-    name: 'HYPE',
-    symbol: 'HYPE',
+    name: 'TestWHYPE',
+    symbol: 'TestWHYPE',
     decimals: 18,
   },
   blockExplorerUrls: ['https://explorer.hyperliquid.xyz'],

@@ -74,7 +74,7 @@ export function AssetSelector({ onAssetSelect, filterPerps = false }: AssetSelec
             minTradeSize: 0.01
           },
           {
-            symbol: 'HYPE',
+            symbol: 'TestWHYPE',
             name: 'Hyperliquid (Native)',
             assetId: '4',
             decimals: 18,

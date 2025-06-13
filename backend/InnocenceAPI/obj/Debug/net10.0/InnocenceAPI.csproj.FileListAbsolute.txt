@@ -55,3 +55,4 @@
 /Users/waynedouglas/github/wayne-o/innocence/backend/InnocenceAPI/obj/Debug/net10.0/InnocenceAPI.pdb
 /Users/waynedouglas/github/wayne-o/innocence/backend/InnocenceAPI/obj/Debug/net10.0/InnocenceAPI.genruntimeconfig.cache
 /Users/waynedouglas/github/wayne-o/innocence/backend/InnocenceAPI/obj/Debug/net10.0/ref/InnocenceAPI.dll
+/Users/waynedouglas/github/wayne-o/innocence/backend/InnocenceAPI/obj/Debug/net10.0/InnocenceAPI.sourcelink.json

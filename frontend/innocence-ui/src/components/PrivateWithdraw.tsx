@@ -31,20 +31,20 @@ export function PrivateWithdraw({ privacySystem, userAddress }: PrivateWithdrawP
   const [selectedDeposit, setSelectedDeposit] = useState<StoredDeposit | null>(null);
   const [uploadedFile, setUploadedFile] = useState<any>(null);
 
-  // Asset decimals mapping
+  // Asset decimals mapping (updated for testnet)
   const assetDecimals: { [key: string]: number } = {
-    '0': 6,   // USDC
-    '1': 8,   // BTC
-    '2': 18,  // ETH
-    '3': 18,  // ARB
-    '4': 18,  // AVAX
-    '5': 18,  // BNB
-    '6': 18,  // MATIC
-    '7': 18,  // OP
-    '8': 9,   // SOL
-    '9': 9,   // SUI
-    '10': 18, // HYPE
-    '11': 6   // USDT
+    '0': 18,  // TestWHYPE
+    '1': 8,   // BTC (unused)
+    '2': 18,  // WETH
+    '3': 6,   // TestUSDC
+    '4': 18,  // AVAX (unused)
+    '5': 18,  // BNB (unused)
+    '6': 18,  // MATIC (unused)
+    '7': 18,  // OP (unused)
+    '8': 9,   // SOL (unused)
+    '9': 9,   // SUI (unused)
+    '10': 18, // (unused)
+    '11': 6   // USDT (unused)
   };
 
   // Load deposits from localStorage
@@ -117,17 +117,62 @@ export function PrivateWithdraw({ privacySystem, userAddress }: PrivateWithdrawP
 
       // Generate balance proof
       setGeneratingProof(true);
-      // For pure EVM contract, always use 18 decimals (native currency)
-      const amountWei = parseUnits(amount, 18);
       
-      // Ensure amount is positive 
-      const withdrawalAmount = Math.abs(Number(amountWei));
-      console.log('Original amount:', amount, 'ETH');
-      console.log('Amount in wei:', amountWei.toString());
-      console.log('Final withdrawal amount:', withdrawalAmount);
+      // Determine token ID and decimals from selected asset or position data
+      let tokenId = 0; // Default to TestWHYPE
+      let decimals = 18; // Default to 18 decimals
       
-      // For pure EVM contract, always use token ID 0 (native currency)
-      const tokenId = 0;
+      // Map asset symbols to token info
+      const tokenMapping: { [name: string]: { id: number, decimals: number } } = {
+        'TestWHYPE': { id: 0, decimals: 18 },
+        'WETH': { id: 2, decimals: 18 },
+        'TestUSDC': { id: 3, decimals: 6 },
+        // Legacy mappings for backward compatibility
+        'HYPE': { id: 0, decimals: 18 },
+        'USDC': { id: 3, decimals: 6 },
+        'ETH': { id: 2, decimals: 18 },
+        'tUSDC': { id: 3, decimals: 6 }
+      };
+      
+      // If user selected an asset, use that
+      if (selectedAsset) {
+        const assetMapping = tokenMapping[selectedAsset.symbol];
+        if (assetMapping) {
+          tokenId = assetMapping.id;
+          decimals = assetMapping.decimals;
+        }
+      } else if (commitmentData.balances) {
+        // Auto-detect from balances - find which token has sufficient balance
+        const availableTokens = Object.keys(commitmentData.balances).filter(token => 
+          parseFloat(commitmentData.balances[token]) >= parseFloat(amount)
+        );
+        
+        if (availableTokens.length > 0) {
+          const withdrawToken = availableTokens[0];
+          const assetMapping = tokenMapping[withdrawToken];
+          if (assetMapping) {
+            tokenId = assetMapping.id;
+            decimals = assetMapping.decimals;
+          }
+        }
+      }
+      
+      // Parse amount with correct decimals
+      const amountWei = parseUnits(amount, decimals);
+      const withdrawalAmount = Number(amountWei); // Convert to number for proof service
+      
+      // Check for overflow before converting to number
+      if (amountWei > BigInt(Number.MAX_SAFE_INTEGER)) {
+        throw new Error('Withdrawal amount too large');
+      }
+      
+      console.log('Withdrawal details:', {
+        originalAmount: amount,
+        tokenId,
+        decimals,
+        amountWei: amountWei.toString(),
+        withdrawalAmount
+      });
       
       const { nullifier, proofBytes, publicValues } = await proofService.generateWithdrawalProof(
         commitment,

@@ -7,8 +7,8 @@ export const getNetworkConfig = () => {
   return {
     network,
     isTestnet,
-    nativeCurrency: 'HYPE', // Both mainnet and testnet use HYPE as native currency
-    nativeCurrencySymbol: 'HYPE',
+    nativeCurrency: 'TestWHYPE', // Both mainnet and testnet use TestWHYPE as native currency
+    nativeCurrencySymbol: 'TestWHYPE',
     chainId: isTestnet ? 998 : 999,
     rpcUrl: isTestnet 
       ? 'https://rpc.hyperliquid-testnet.xyz/evm'
@@ -37,7 +37,7 @@ export const getTokenInfo = (tokenId: number) => {
   
   if (tokenId === 0) {
     return {
-      symbol: 'HYPE',
+      symbol: 'TestWHYPE',
       name: 'Hyperliquid Native',
       decimals: 18,
       isNative: true

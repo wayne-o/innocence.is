@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { formatEther } from 'ethers';
 import { PrivacySystemService } from './services/blockchain-v4';
 import { PrivateDepositEVM } from './components/PrivateDepositEVM';
 import { PrivateWithdraw } from './components/PrivateWithdraw';
 import { PrivateTrade } from './components/PrivateTrade';
+import { PrivateSwap } from './components/PrivateSwap';
 import { PrivateBalances } from './components/PrivateBalances';
 import { PrivatePortfolio } from './components/PrivatePortfolio';
 import { switchToHyperliquidTestnet, switchToHyperliquidMainnet } from './utils/metamask-config';
@@ -22,10 +24,54 @@ function App() {
   const [privacySystem] = useState(() => new PrivacySystemService(PRIVACY_SYSTEM_ADDRESS));
   const [connected, setConnected] = useState(false);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'deposit' | 'trade' | 'withdraw' | 'balances' | 'portfolio'>('deposit');
+  const [activeTab, setActiveTab] = useState<'deposit' | 'trade' | 'swap' | 'withdraw' | 'balances' | 'portfolio'>('deposit');
+  const [currentCommitment, setCurrentCommitment] = useState<string | null>(null);
+  
+  // Function to reload commitment - can be called from anywhere
+  const loadCurrentCommitment = () => {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('innocence_0x')) {
+        const commitment = key.replace('innocence_', '');
+        
+        // Check if this commitment needs balance migration
+        const positionData = localStorage.getItem(key);
+        if (positionData) {
+          const position = JSON.parse(positionData);
+          if (!position.balances) {
+            // Look for corresponding deposit record
+            const depositKey = `deposit_${commitment}`;
+            const depositData = localStorage.getItem(depositKey);
+            if (depositData) {
+              const deposit = JSON.parse(depositData);
+              // Add balance based on deposit (assuming TestWHYPE for native deposits)
+              position.balances = {
+                'TestWHYPE': formatEther(deposit.amount)
+              };
+              position.lastUpdated = Date.now();
+              localStorage.setItem(key, JSON.stringify(position));
+            } else {
+              // No deposit record found, assume a default balance
+              position.balances = {
+                'TestWHYPE': '1.0' // Default 1 TestWHYPE
+              };
+              position.lastUpdated = Date.now();
+              localStorage.setItem(key, JSON.stringify(position));
+            }
+          }
+        }
+        
+        setCurrentCommitment(commitment);
+        break; // Use the first commitment found
+      }
+    }
+  };
 
   useEffect(() => {
     checkConnection();
+    
+    // Load current commitment on mount
+    loadCurrentCommitment();
     
     // Set up listeners only if ethereum exists
     if (window.ethereum) {
@@ -169,6 +215,12 @@ function App() {
                 Trade
               </button>
               <button 
+                className={activeTab === 'swap' ? 'active' : ''}
+                onClick={() => setActiveTab('swap')}
+              >
+                Swap
+              </button>
+              <button 
                 className={activeTab === 'withdraw' ? 'active' : ''}
                 onClick={() => setActiveTab('withdraw')}
               >
@@ -199,6 +251,16 @@ function App() {
                 <PrivateTrade 
                   privacySystem={privacySystem}
                   userAddress={userAddress!}
+                />
+              )}
+              {activeTab === 'swap' && (
+                <PrivateSwap 
+                  privacySystem={privacySystem}
+                  userAddress={userAddress!}
+                  commitment={currentCommitment || undefined}
+                  onSwapComplete={() => {
+                    // Optionally refresh balances or show success
+                  }}
                 />
               )}
               {activeTab === 'withdraw' && (
