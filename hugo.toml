@@ -1,0 +1,32 @@
+baseURL = 'https://innocence.is/'
+languageCode = 'en-us'
+title = 'Innocence Protocol'
+theme = 'innocence-theme'
+summaryLength = 20
+
+[params]
+  description = "Private trading on Hyperliquid. Zero-knowledge proof powered privacy for DeFi."
+  
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Blog"
+    url = "/blog/"
+    weight = 2
+  [[menu.main]]
+    name = "Privacy Policy"
+    url = "/privacy-policy/"
+    weight = 3
+  [[menu.main]]
+    name = "Terms"
+    url = "/terms/"
+    weight = 4
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  
+[permalinks]
+  blog = "/blog/:slug/"

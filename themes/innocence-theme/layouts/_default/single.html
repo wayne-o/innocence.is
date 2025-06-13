@@ -1,0 +1,146 @@
+{{ define "title" }}
+  {{ .Title }} - {{ .Site.Title }}
+{{ end }}
+
+{{ define "styles" }}
+<style>
+  body {
+    background-color: #13313d;
+    animation: none;
+    font-size: 1rem !important;
+  }
+  
+  .article-container {
+    min-height: 100vh;
+    padding: 2em 0;
+  }
+  
+  .article-header {
+    text-align: center;
+    margin-bottom: 3em;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .article-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5em;
+  }
+  
+  .article-meta {
+    font-size: 0.875rem;
+    opacity: 0.7;
+    margin-bottom: 1em;
+  }
+  
+  .back-link {
+    color: white;
+    opacity: 0.7;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .back-link:hover {
+    opacity: 1;
+  }
+  
+  .article-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 400;
+    font-size: 1rem;
+  }
+  
+  .article-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1.5em 0 0.5em;
+    animation: none;
+  }
+  
+  .article-content h2::after {
+    display: none;
+  }
+  
+  .article-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 1.2em 0 0.5em;
+  }
+  
+  .article-content p {
+    margin-bottom: 1em;
+    opacity: 0.9;
+  }
+  
+  .article-content pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1em 0;
+    color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .article-content code {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  
+  .article-content pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  .article-content a {
+    color: #1ded9d;
+    text-decoration: underline;
+  }
+  
+  .article-content a:hover {
+    color: #6e1eed;
+  }
+  
+  .article-content ul, .article-content ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+  }
+  
+  .article-content li {
+    margin-bottom: 0.5em;
+    opacity: 0.9;
+  }
+  
+  .article-content blockquote {
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    padding-left: 1em;
+    margin: 1em 0;
+    opacity: 0.8;
+    font-style: italic;
+  }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<div class="article-container">
+  <div class="container">
+    <div class="article-header">
+      <a href="/blog/" class="back-link">← Back to blog</a>
+      <h1>{{ .Title }}</h1>
+      <div class="article-meta">
+        {{ .Date.Format "January 2, 2006" }} · {{ .ReadingTime }} min read
+      </div>
+    </div>
+    
+    <article class="article-content">
+      {{ .Content }}
+    </article>
+  </div>
+</div>
+{{ end }}
